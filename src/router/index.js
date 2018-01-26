@@ -4,6 +4,8 @@ import HelloWorld from '@/components/HelloWorld'
 
 import index from '@/components/index/index'
 
+import loginComponent from '@/components/login/login'
+
 Vue.use(Router)
 
 export default new Router({
@@ -12,6 +14,11 @@ export default new Router({
       path: '/',
       name: 'HelloWorld',
       component: HelloWorld
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: loginComponent
     },
     {
       path: '/index',

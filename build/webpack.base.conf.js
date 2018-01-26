@@ -42,6 +42,11 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+        include: ['static/css/','node_modules/element-ui/lib/']
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
