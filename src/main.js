@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import resource from 'vue-resource'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -79,6 +80,7 @@ import {
 
 Vue.config.productionTip = false
 
+Vue.use(resource);
 Vue.use(ElementUI,{ size: 'small' })
 
 Vue.use(Pagination)
@@ -153,7 +155,6 @@ Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$prompt = MessageBox.prompt
 Vue.prototype.$notify = Notification
 Vue.prototype.$message = Message
-
 
 /* eslint-disable no-new */
 new Vue({

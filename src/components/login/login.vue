@@ -11,33 +11,33 @@
 
         <div class="mb30"></div>
 
-        <form action="" method="post">
-          <div class="input-group mb15">
-					<span class="input-group-addon"><i
-            class="glyphicon glyphicon-user"></i></span>
-            <input type="text" class="form-control" placeholder="用户名" v-model="userName">
-          </div>
-          <!-- input-group -->
-          <div class="input-group mb15">
-					<span class="input-group-addon"><i
-            class="glyphicon glyphicon-lock"></i></span>
-            <input type="password" class="form-control" placeholder="密码" v-model="pwd">
-          </div>
-          <!-- input-group -->
-          <input type="hidden" name="ip" id="ip">
+        <div class="input-group mb15">
+					<span class="input-group-addon">
+            <i class="el-icon-star-off"></i>
+          </span>
+          <input type="text" class="form-control" placeholder="用户名" v-model="userName">
+        </div>
+        <!-- input-group -->
+        <div class="input-group mb15">
+					<span class="input-group-addon">
+            <i class="el-icon-suoding2"></i>
+          </span>
+          <input type="password" class="form-control" placeholder="密码" v-model="pwd" @keyup.enter="login">
+        </div>
+        <!-- input-group -->
+        <input type="hidden" name="ip" id="ip">
 
-          <div class="clearfix">
-            <div class="pull-left">
-              <div class="ckbox ckbox-primary mt10">
-              </div>
-            </div>
-            <div class="pull-right">
-              <button type="submit" class="btn btn-success">
-                登录 <i class="el-icon-arrow-right ml5"></i>
-              </button>
+        <div class="clearfix">
+          <div class="pull-left">
+            <div class="ckbox ckbox-primary mt10">
             </div>
           </div>
-        </form>
+          <div class="pull-right">
+            <button type="button" class="btn btn-success" @click="login">
+              登录 <i class="el-icon-arrow-right ml5"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -56,7 +56,41 @@
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
-    methods: {},
+    methods: {
+      login() {
+        if (!this.isExist(this.userName)) {
+          alert("用户名不能为空");
+          return;
+        }
+        if (!this.isExist(this.pwd)) {
+          alert("密码不能为空");
+          return;
+        }
+        let url = 'api/admin/login';
+        //url = 'limo/fa/login.html';
+        let data = {
+          email: this.userName,
+          passWord:this.pwd
+        };
+        data = {"userName": this.userName, "passWord": this.pwd};
+        this.$http.post(url,data).then(function (data) {
+          console.log(data);
+          this.userName = '';
+          this.pwd = '';
+        }, function (err) {
+          console.log("登录错误:", err);
+          this.userName = 'a';
+          this.pwd = '';
+        })
+      },
+      isExist(opt) {
+        let flag = false;
+        if (null != opt && '' != opt && 'null' != opt && typeof opt != 'undefined') {
+          flag = true;
+        }
+        return flag;
+      }
+    },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
       document.body.style.backgroundColor = "#428bca";
@@ -77,14 +111,17 @@
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    position: relative;
     font-size: 13px;
     color: #636E7B;
     height: 22.25rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -11.125rem;
+    margin-left: -200px;
   }
 
   .panel-signin, .panel-signup {
-    margin: 80px auto 0 auto;
   }
 
   .panel-signin {

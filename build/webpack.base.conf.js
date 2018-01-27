@@ -44,7 +44,7 @@ module.exports = {
       {
         test: /\.css$/,
         loader: 'style-loader!css-loader',
-        include: ['static/css/','node_modules/element-ui/lib/']
+        include: ['/static','/node_modules/element-ui/lib']
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
