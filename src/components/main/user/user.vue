@@ -25,7 +25,7 @@
     </el-row>
 
     <el-row class="row">
-      <el-col :span="24">
+      <el-col :span="23">
         <table border="1">
           <tr align="center">
             <td width="5%">#</td>
@@ -91,20 +91,5 @@
 </script>
 
 <style>
-  .row {
-    margin-bottom: 1.5rem;
-  }
 
-  table {
-    width: 82.1rem;
-    background: #FFF;
-  }
-
-  table tr{
-    height:1.875rem;
-  }
-
-  table tr td {
-    color: #666;
-  }
 </style>
