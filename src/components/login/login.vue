@@ -78,8 +78,10 @@
           if(data.ok){
             if(data.body.result == 0){
               sessionStorage.setItem("token",data.body.data.token);
-              window.name=data.body.data.userName;
-              window.roleId=data.body.data.name;
+              window.userName=data.body.data.userName;
+              window.nickName=data.body.data.nickName;
+              window.phone = data.body.data.phone;
+              window.loginId = data.body.data.id;
               this.$router.push({path : '/index/user'});
             }else{
               alert(data.body.msg);
@@ -87,7 +89,7 @@
           }
         }, function (err) {
           console.log("登录错误:", err);
-          this.userName = 'a';
+          this.userName = '';
           this.pwd = '';
         });
 

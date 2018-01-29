@@ -63,7 +63,7 @@
         if(data && Number(data)){
           this.settingFlag = false;
           if(data === 1){
-
+            this.$router.push("/index/managerInfo");
           }else if(data === 2){
             this.$router.push("/index/changePwd");
           }else if(data === 3){
@@ -77,8 +77,8 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.name = window.name;
-      this.roleId = window.roleId;
+      this.name = window.userName;
+      this.roleId = window.nickName;
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

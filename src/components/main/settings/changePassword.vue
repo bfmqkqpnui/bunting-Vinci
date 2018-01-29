@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="changerPwd">
     <el-row class="row">
       <el-col :span="6">
         <el-breadcrumb separator-class="el-icon-d-arrow-right">
@@ -13,20 +13,20 @@
       <el-col :span="24">
         <div class="pwdBody">
           <div class="configPwd">
-            <el-input v-model.trim="configPwd" placeholder="">
-              <template slot="prepend">原始密码</template>
+            <el-input v-model.trim="configPwd" placeholder="" type="password" class="configInput">
+              <template slot="prepend" class="prepend">原始密码</template>
             </el-input>
           </div>
 
           <div class="configPwd">
-            <el-input v-model.trim="newPwd" placeholder="">
-              <template slot="prepend">新密码</template>
+            <el-input v-model.trim="newPwd" placeholder="" type="password" class="configInput">
+              <template slot="prepend" class="prepend">新密码</template>
             </el-input>
           </div>
 
           <div class="configPwd">
-            <el-input v-model.trim="repeatPwd" placeholder="">
-              <template slot="prepend">重复密码</template>
+            <el-input v-model.trim="repeatPwd" placeholder="" type="password" class="configInput">
+              <template slot="prepend" class="prepend">重复密码</template>
             </el-input>
           </div>
         </div>
@@ -35,7 +35,7 @@
 
     <el-row class="row">
       <el-col :span="24" class="btnPostion">
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="update">确认</el-button>
         <el-button type="danger" plain>返回</el-button>
       </el-col>
     </el-row>
@@ -56,7 +56,47 @@
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
-    methods: {},
+    methods: {
+      update(){
+        if(this.isExist(this.configPwd)){
+
+        }else{
+          alert("原始密码不能为空");
+          return ;
+        }
+        if(this.isExist(this.newPwd)){
+          if(this.newPwd == this.configPwd){
+
+          }else{
+            alert("新密码和重复密码不一致");
+            return ;
+          }
+        }else{
+          alert("原始密码不能为空");
+          return ;
+        }
+        let url = '/api/admin/updateAdminPassWord';
+        let data = {
+          id:'',
+          oldPassWord : '',
+          newPassWord : '',
+          token : ''
+        };
+        this.$http.post(url,data).then(function(data){
+          console.log(">>>>"+data);
+        },function(err){
+          console.log("接口错误:",err);
+        })
+
+      },
+      isExist(opt) {
+        let flag = false;
+        if (null != opt && '' != opt && 'null' != opt && typeof opt != 'undefined') {
+          flag = true;
+        }
+        return flag;
+      }
+    },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
       this.$emit("config",11);
@@ -74,7 +114,7 @@
     font-style: normal;
     font-size: 13px;
     color: #333;
-    text-align: center;
+    text-align: left;
     line-height: normal;
     border-width: 0px;
     width: 100%;
@@ -96,11 +136,11 @@
     padding-bottom: 1.5rem;
   }
 
-  .el-input-group__prepend{
+  .changerPwd .row .el-input-group__prepend{
     width:52px;
   }
 
-  .el-input__inner{
+  .changerPwd .row .el-input__inner{
     width:13.75rem;
   }
   .btnPostion{

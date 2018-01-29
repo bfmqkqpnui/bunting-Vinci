@@ -19,12 +19,6 @@
     </el-row>
 
     <el-row class="row">
-      <el-col :span="24">
-        <pageComponent></pageComponent>
-      </el-col>
-    </el-row>
-
-    <el-row class="row">
       <el-col :span="23">
         <table border="1">
           <tr align="center">
@@ -62,6 +56,12 @@
           </tr>
           </tbody>
         </table>
+      </el-col>
+    </el-row>
+
+    <el-row class="row">
+      <el-col :span="24">
+        <pageComponent></pageComponent>
       </el-col>
     </el-row>
   </div>

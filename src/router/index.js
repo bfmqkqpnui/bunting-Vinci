@@ -11,6 +11,8 @@ import userComponent from '@/components/main/user/user'
 import systemComponent from '@/components/main/system/system'
 import changePwdComponent from '@/components/main/settings/changePassword'
 
+import managerComponent from '@/components/main/settings/managerInfo'
+
 Vue.use(Router)
 
 export default new Router({
@@ -46,6 +48,10 @@ export default new Router({
         {
           path: 'changePwd',
           component: changePwdComponent
+        },
+        {
+          path: 'managerInfo',
+          component: managerComponent
         },
       ]
     }
