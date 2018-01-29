@@ -15,14 +15,14 @@
 					<span class="input-group-addon">
             <i class="el-icon-star-off"></i>
           </span>
-          <input type="text" class="form-control" placeholder="用户名" v-model="userName">
+          <input type="text" class="form-control" placeholder="用户名" v-model.trim="userName">
         </div>
         <!-- input-group -->
         <div class="input-group mb15">
 					<span class="input-group-addon">
             <i class="el-icon-suoding2"></i>
           </span>
-          <input type="password" class="form-control" placeholder="密码" v-model="pwd" @keyup.enter="login">
+          <input type="password" class="form-control" placeholder="密码" v-model.trim="pwd" @keyup.enter="login">
         </div>
         <!-- input-group -->
         <input type="hidden" name="ip" id="ip">
@@ -66,22 +66,31 @@
           alert("密码不能为空");
           return;
         }
-        let url = 'api/admin/login';
+        let url = '/api/admin/login';
         //url = 'limo/fa/login.html';
-        let data = {
-          email: this.userName,
-          passWord:this.pwd
-        };
-        data = {"userName": this.userName, "passWord": this.pwd};
+        //url = '/localApi/admin/login';
+        //url = '/localApi/member/login';
+        let data = {"userName": this.userName, "passWord": this.pwd};
         this.$http.post(url,data).then(function (data) {
           console.log(data);
           this.userName = '';
           this.pwd = '';
+          if(data.ok){
+            if(data.body.result == 0){
+              sessionStorage.setItem("token",data.body.data.token);
+              window.name=data.body.data.userName;
+              window.roleId=data.body.data.name;
+              this.$router.push({path : '/index/user'});
+            }else{
+              alert(data.body.msg);
+            }
+          }
         }, function (err) {
           console.log("登录错误:", err);
           this.userName = 'a';
           this.pwd = '';
-        })
+        });
+
       },
       isExist(opt) {
         let flag = false;

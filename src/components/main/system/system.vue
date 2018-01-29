@@ -4,7 +4,7 @@
     <el-row class="row">
       <el-col :span="6">
         <el-breadcrumb separator-class="el-icon-d-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">达芬奇睡袋</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{path:'/index/user'}">达芬奇睡袋</el-breadcrumb-item>
           <el-breadcrumb-item>系统配置</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
@@ -76,10 +76,14 @@
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
-    methods: {},
+    methods: {
+      home() {
+        location.reload()
+      }
+    },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.$emit("config",6);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

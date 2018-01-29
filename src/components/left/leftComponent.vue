@@ -2,24 +2,27 @@
   <el-row class="menu">
     <el-col :span="3">
       <ul class="left-menu">
-        <li :class="{active:menuSelFlag.userFlag}" @click="selMenu($event)" value="1"><a
+        <li :class="{active:menuSelFlag.userFlag}" @click="selMenu(1)" value="1"><a
           href="javascript:void(0)">用户</a></li>
-        <li :class="{active:menuSelFlag.deviceFlag}" @click="selMenu" value="2"><a href="javascript:void(0)">设备</a></li>
-        <li :class="{active:menuSelFlag.feedbackFlag}" @click="selMenu" value="3"><a href="javascript:void(0)">用户反馈</a>
+        <li :class="{active:menuSelFlag.deviceFlag}" @click="selMenu(2)" value="2"><a href="javascript:void(0)">设备</a>
         </li>
-        <li :class="{active:menuSelFlag.helpFlag}" @click="selMenu" value="4"><a href="javascript:void(0)">帮助文档</a></li>
-        <li :class="{active:menuSelFlag.serviceFlag}" @click="selMenu" value="5"><a href="javascript:void(0)">客服人员</a>
+        <li :class="{active:menuSelFlag.feedbackFlag}" @click="selMenu(3)" value="3"><a
+          href="javascript:void(0)">用户反馈</a>
         </li>
-        <li :class="{active:menuSelFlag.systemFlag}" @click="selMenu($event)" value="6"><a href="javascript:void(0)">系统配置</a>
+        <li :class="{active:menuSelFlag.helpFlag}" @click="selMenu(4)" value="4"><a href="javascript:void(0)">帮助文档</a>
         </li>
-        <li :class="{active:menuSelFlag.dataReportFlag}" @click="selMenu" value="7"><a
+        <li :class="{active:menuSelFlag.serviceFlag}" @click="selMenu(5)" value="5"><a
+          href="javascript:void(0)">客服人员</a>
+        </li>
+        <li :class="{active:menuSelFlag.systemFlag}" @click="selMenu(6)" value="6"><a href="javascript:void(0)">系统配置</a>
+        </li>
+        <li :class="{active:menuSelFlag.dataReportFlag}" @click="selMenu(7)" value="7"><a
           href="javascript:void(0)">数据报表</a></li>
       </ul>
     </el-col>
     <el-col :span="21">
       <div style="padding:1rem;min-height: 37.5rem;background: #F2F2F2;">
-        <userComponent v-show="menuSelFlag.userFlag"></userComponent>
-        <systemComponent v-show="menuSelFlag.systemFlag"></systemComponent>
+        <router-view @config="config"></router-view>
       </div>
     </el-col>
   </el-row>
@@ -35,7 +38,7 @@
     data() {
       return {
         menuSelFlag: {
-          userFlag: true,
+          userFlag: false,
           deviceFlag: false,
           feedbackFlag: false,
           helpFlag: false,
@@ -43,15 +46,14 @@
           systemFlag: false,
           dataReportFlag: false
         },
-
       }
     },
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      selMenu(event) {
-        if (event.currentTarget.value == 1) {
+      selMenu(index) {
+        if (index == 1) {
           this.menuSelFlag.userFlag = true;
           this.menuSelFlag.deviceFlag = false;
           this.menuSelFlag.feedbackFlag = false;
@@ -59,7 +61,8 @@
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.dataReportFlag = false;
-        } else if (event.currentTarget.value == 2) {
+          this.$router.push("/index/user");
+        } else if (index == 2) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = true;
           this.menuSelFlag.feedbackFlag = false;
@@ -67,7 +70,7 @@
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.dataReportFlag = false;
-        } else if (event.currentTarget.value == 3) {
+        } else if (index == 3) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
           this.menuSelFlag.feedbackFlag = true;
@@ -75,7 +78,7 @@
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.dataReportFlag = false;
-        } else if (event.currentTarget.value == 4) {
+        } else if (index == 4) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
           this.menuSelFlag.feedbackFlag = false;
@@ -83,7 +86,7 @@
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.dataReportFlag = false;
-        } else if (event.currentTarget.value == 5) {
+        } else if (index == 5) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
           this.menuSelFlag.feedbackFlag = false;
@@ -91,7 +94,7 @@
           this.menuSelFlag.serviceFlag = true;
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.dataReportFlag = false;
-        } else if (event.currentTarget.value == 6) {
+        } else if (index == 6) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
           this.menuSelFlag.feedbackFlag = false;
@@ -99,7 +102,8 @@
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = true;
           this.menuSelFlag.dataReportFlag = false;
-        } else if (event.currentTarget.value == 7) {
+          this.$router.push("/index/system");
+        } else if (index == 7) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
           this.menuSelFlag.feedbackFlag = false;
@@ -108,7 +112,7 @@
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.dataReportFlag = true;
         } else {
-          this.menuSelFlag.userFlag = true;
+          this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
           this.menuSelFlag.feedbackFlag = false;
           this.menuSelFlag.helpFlag = false;
@@ -116,14 +120,19 @@
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.dataReportFlag = false;
         }
+      },
+      config(data) {
+        console.log(">>>>>"+data);
+        if (data && Number(data)) {
+          this.selMenu(data);
+        }
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {userComponent, systemComponent}
+    //components: {userComponent, systemComponent}
   }
 </script>
 

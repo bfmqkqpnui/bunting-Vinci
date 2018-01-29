@@ -12,8 +12,8 @@
             <img src="/static/images/u24.png" alt="" width="35">
           </div>
           <div class="head-right-user" @click="showSetting">
-            <span>管理员</span>
-            <span>admin</span>
+            <span>{{roleId}}</span>
+            <span>{{name}}</span>
             <img src="/static/images/u12.png" alt="" height="11" width="15">
           </div>
         </div>
@@ -21,17 +21,17 @@
       <!-- 菜单设置 -->
       <div class="setting" :class="{active:settingFlag}">
         <div class="top">
-          <div>
+          <div @click="selectMenu(1)">
             <img src="/static/images/u15.png" alt="" width="25">
             <span class="ax_default">个人信息</span>
           </div>
-          <div>
-            <img src="/static/images/u18.png" alt="" width="22">
-            <span class="ax_default">密码修改</span>
+          <div @click="selectMenu(2)">
+              <img src="/static/images/u18.png" alt="" width="22">
+              <span class="ax_default">密码修改</span>
           </div>
         </div>
         <div class="bottom">
-          <div>
+          <div @click="selectMenu(3)">
             <img src="/static/images/u20.png" alt="" width="20">
             <span class="ax_default">退出</span>
           </div>
@@ -47,7 +47,9 @@
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
-        settingFlag : false
+        settingFlag : false,
+        roleId:'',
+        name:''
       }
     },
     //计算属性
@@ -56,11 +58,27 @@
     methods: {
       showSetting(){
         this.settingFlag = !this.settingFlag;
+      },
+      selectMenu(data){
+        if(data && Number(data)){
+          this.settingFlag = false;
+          if(data === 1){
+
+          }else if(data === 2){
+            this.$router.push("/index/changePwd");
+          }else if(data === 3){
+            window.name = '';
+            window.roleId = '';
+            sessionStorage.setItem("token",'');
+            this.$router.push("/login");
+          }
+        }
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.name = window.name;
+      this.roleId = window.roleId;
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}
@@ -150,7 +168,7 @@
   .head-right .head-right-user img {
     position: absolute;
     top: 1.7rem;
-    left: 3rem;
+    left: 4rem;
   }
 
   .setting {

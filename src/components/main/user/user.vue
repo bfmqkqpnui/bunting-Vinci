@@ -3,7 +3,7 @@
     <el-row class="row">
       <el-col :span="6">
         <el-breadcrumb separator-class="el-icon-d-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">达芬奇睡袋</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/index/user' }">达芬奇睡袋</el-breadcrumb-item>
           <el-breadcrumb-item>用户</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
@@ -83,7 +83,7 @@
     methods: {},
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.$emit("config",1);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {pageComponent}
