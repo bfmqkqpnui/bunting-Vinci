@@ -125,7 +125,7 @@
       let member = localStorage.getItem('memberInfo');
       if (this.isExist(member)) {
         let memberJson = JSON.parse(member);
-        this.customName = memberJson.userName;
+        this.customName = memberJson.name;
         this.customNickName = memberJson.nickName;
         this.customTel = memberJson.phone;
       }

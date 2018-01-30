@@ -32,8 +32,7 @@
             <td v-text="item.roleName"></td>
             <td>{{item.roleOptionList | showRoleName}}</td>
             <td>
-              <a href="javascript:void(0)">管理</a>
-              <a href="javascript:void(0)">查看</a>
+              <router-link :to="{path:'/index/system/roleManager',query:{roleId:item.id}}">管理</router-link>
               <a href="javascript:void(0)">删除</a>
             </td>
           </tr>

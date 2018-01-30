@@ -15,7 +15,7 @@
           <a href="javascript:void(0)">帮助文档</a>
         </li>
         <li :class="{active:menuSelFlag.serviceFlag}" @click="selMenu(5)">
-          <a href="javascript:void(0)">客服人员</a>
+          <a href="javascript:void(0)">账户管理</a>
         </li>
         <li :class="{active:menuSelFlag.systemFlag}" @click="selMenu(6)">
           <a href="javascript:void(0)">系统配置</a>
@@ -109,7 +109,7 @@
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
-          this.$router.push("/index/customerService");
+          this.$router.push("/index/acountManager");
         } else if (index == 6) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;

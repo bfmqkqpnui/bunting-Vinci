@@ -14,27 +14,19 @@
       <el-col :span="24">
         <div class="pwdBody">
           <div class="configPwd">
-            <span>角色：总部报表角色</span>
+            <span>角色：<span v-text="roleName"></span></span>
           </div>
 
           <div class="configPwd">
             <span>权限项：</span>
-            <el-checkbox-group v-model="checkedRoles">
-              <el-checkbox v-for="role in roles" :label="role" :key="role" border></el-checkbox>
+          </div>
+
+          <div class="configPwd">
+            <el-checkbox-group v-model="checkedRoles" @change="handleCheckedRolesChange">
+              <el-checkbox v-for="role in roles" :label="role.id" :key="role.id" border>{{role.optionName}}</el-checkbox>
             </el-checkbox-group>
           </div>
 
-          <div class="configPwd">
-            <span>添加账户：</span>
-          </div>
-
-          <div class="configPwd">
-            <el-input v-model.trim="acountName" placeholder="账户名" clearable>
-            </el-input>
-
-            <el-input v-model.trim="acountPwd" placeholder="密码" type="password" clearable>
-            </el-input>
-          </div>
         </div>
       </el-col>
     </el-row>
@@ -54,27 +46,32 @@
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
+        checkedRoles: [],
         roles: [],
-        acountName : '',
-        acountPwd : ''
+        roleId: '',
+        roleName : ''
       }
     },
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      config() {
+      queryAllRoles(){
         let member = localStorage.getItem('memberInfo');
         if (this.isExist(member)) {
           let memberJson = JSON.parse(member);
-          let url = '/api/role/queryAllRole';
+
+          let url = '/api/role/queryAllRoleOptions';
           let params = {
-            token: memberJson.token
+            pageIndex : 1,
+            pageSize : 50,
+            token : memberJson.token
           };
+
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
-                console.log(data.body.data);
+                this.roles = data.body.data.result;
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
@@ -88,14 +85,70 @@
             console.log("接口错误:", err);
           })
         }
+      },
+      config() {
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+          let url = '/api/role/queryRoleById';
+          let params = {
+            token: memberJson.token,
+            id: this.roleId
+          };
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body.data);
+                this.roleName = data.body.data.roleName;
+                let checkList = data.body.data.roleOptionList;
+                let arr = [];
+                for(var index in checkList){
+                  arr.push(checkList[index].id);
+                }
+                console.log(arr);
+                this.checkedRoles = arr;
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      turnBack() {
+        this.$router.push({path: '/index/system'});
+      },
+      update() {
+        console.log("ok>>>>"+this.checkedRoles);
+      },
+      handleCheckedRolesChange(){
+
+      },
+      getParams() {
+        // 取到路由带过来的参数
+        let roleId = this.$route.query.roleId;
+        // 将数据放在当前组件的数据内
+        this.roleId = roleId;
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.queryAllRoles();
+      this.getParams();
+      this.config();
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {}
+    components: {},
+    watch: {
+      // 监测路由变化,只要变化了就调用获取路由参数方法将数据存储本组件即可
+      '$route': 'getParams'
+    }
   }
 </script>
 

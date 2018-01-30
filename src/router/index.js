@@ -15,6 +15,7 @@ import changePwdComponent from '@/components/main/settings/changePassword'
 import managerComponent from '@/components/main/settings/managerInfo'
 
 import customerServiceComponent from '@/components/main/customer/customerService'
+import customerOperationComponent from '@/components/main/customer/customerOperation/customerOperation'
 
 import authorityComponent from '@/components/main/authority/authority'
 import authorOperationComponent from '@/components/main/authority/operation/authorOperation'
@@ -79,11 +80,18 @@ export default new Router({
           component: managerComponent
         },
         {
-          path: 'customerService',
+          path: 'acountManager',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
           component: customerServiceComponent
+        },
+        {
+          path: '/index/acountManager/acountOperation',
+          meta: {
+            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+          },
+          component: customerOperationComponent
         },
         {
           path: 'authority',
