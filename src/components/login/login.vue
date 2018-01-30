@@ -67,40 +67,41 @@
           return;
         }
         let url = '/api/admin/login';
+        //url = '/shellApi/admin/login';
         //url = 'limo/fa/login.html';
         //url = '/localApi/admin/login';
         //url = '/localApi/member/login';
         let data = {"userName": this.userName, "passWord": this.pwd};
         this.$http.post(url,data).then(function (data) {
-          console.log(data);
+          console.log(data.body);
           this.userName = '';
           this.pwd = '';
           if(data.ok){
             if(data.body.result == 0){
-              sessionStorage.setItem("token",data.body.data.token);
-              window.userName=data.body.data.userName;
-              window.nickName=data.body.data.nickName;
-              window.phone = data.body.data.phone;
-              window.loginId = data.body.data.id;
+              let member = {
+                id : data.body.data.id,
+                headImg : data.body.data.headImg,
+                name : data.body.data.name,
+                nickName : data.body.data.nickName,
+                userName : data.body.data.userName,
+                phone : data.body.data.phone,
+                role : data.body.data.role,
+                token : data.body.data.token
+              };
+              localStorage.setItem("memberInfo",JSON.stringify(member));
               this.$router.push({path : '/index/user'});
             }else{
               alert(data.body.msg);
             }
           }
         }, function (err) {
-          console.log("登录错误:", err);
+          console.log("登录错误:", err.body);
           this.userName = '';
           this.pwd = '';
         });
 
       },
-      isExist(opt) {
-        let flag = false;
-        if (null != opt && '' != opt && 'null' != opt && typeof opt != 'undefined') {
-          flag = true;
-        }
-        return flag;
-      }
+
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {

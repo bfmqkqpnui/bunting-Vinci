@@ -33,5 +33,16 @@
     border-collapse: collapse;
     border-spacing: 0;
     border-color: #ccc;
+
+    table-layout: fixed;
+  }
+
+  table tr td {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    -o-text-overflow:ellipsis;
+    -moz-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
   }
 </style>

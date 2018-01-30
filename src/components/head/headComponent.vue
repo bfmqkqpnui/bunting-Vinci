@@ -67,18 +67,21 @@
           }else if(data === 2){
             this.$router.push("/index/changePwd");
           }else if(data === 3){
-            window.name = '';
-            window.roleId = '';
-            sessionStorage.setItem("token",'');
+            localStorage.removeItem("memberInfo");
             this.$router.push("/login");
           }
         }
-      }
+      },
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.name = window.userName;
-      this.roleId = window.nickName;
+      let member=localStorage.getItem('memberInfo');
+      if(this.isExist(member)){
+        let memberJson = JSON.parse(member);
+        this.name = memberJson.userName;
+        this.roleId = memberJson.nickName;
+      }
+
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

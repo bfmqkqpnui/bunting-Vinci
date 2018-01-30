@@ -7,7 +7,7 @@
       :page-sizes="[10, 20, 30, 40, 50, 100, 200, 300, 400]"
       :page-size="10"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400">
+      :total="resultCount">
     </el-pagination>
   </div>
 </template>
@@ -16,9 +16,12 @@
   //Js部分尽量采用ES6语法，webpack babel插件会转义兼容
   export default {
     //组件私有数据（必须是function，而且要return对象类型）
+    props: {
+      resultCount : 0,
+    },
     data() {
       return {
-        currentPage:1
+        currentPage:1,
       }
     },
     //计算属性
@@ -26,10 +29,10 @@
     //函数集，自己封装，便于开发使用
     methods: {
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.$emit('handleSizeChange', val);
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.$emit('handleCurrentChange', val);
       }
     },
     //生命周期钩子：组件实例渲染完成时调用

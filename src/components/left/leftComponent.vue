@@ -2,22 +2,30 @@
   <el-row class="menu">
     <el-col :span="3">
       <ul class="left-menu">
-        <li :class="{active:menuSelFlag.userFlag}" @click="selMenu(1)" value="1"><a
-          href="javascript:void(0)">用户</a></li>
-        <li :class="{active:menuSelFlag.deviceFlag}" @click="selMenu(2)" value="2"><a href="javascript:void(0)">设备</a>
+        <li :class="{active:menuSelFlag.userFlag}" @click="selMenu(1)">
+          <a href="javascript:void(0)">用户</a>
         </li>
-        <li :class="{active:menuSelFlag.feedbackFlag}" @click="selMenu(3)" value="3"><a
-          href="javascript:void(0)">用户反馈</a>
+        <li :class="{active:menuSelFlag.deviceFlag}" @click="selMenu(2)">
+          <a href="javascript:void(0)">设备</a>
         </li>
-        <li :class="{active:menuSelFlag.helpFlag}" @click="selMenu(4)" value="4"><a href="javascript:void(0)">帮助文档</a>
+        <li :class="{active:menuSelFlag.feedbackFlag}" @click="selMenu(3)">
+          <a href="javascript:void(0)">用户反馈</a>
         </li>
-        <li :class="{active:menuSelFlag.serviceFlag}" @click="selMenu(5)" value="5"><a
-          href="javascript:void(0)">客服人员</a>
+        <li :class="{active:menuSelFlag.helpFlag}" @click="selMenu(4)">
+          <a href="javascript:void(0)">帮助文档</a>
         </li>
-        <li :class="{active:menuSelFlag.systemFlag}" @click="selMenu(6)" value="6"><a href="javascript:void(0)">系统配置</a>
+        <li :class="{active:menuSelFlag.serviceFlag}" @click="selMenu(5)">
+          <a href="javascript:void(0)">客服人员</a>
         </li>
-        <li :class="{active:menuSelFlag.dataReportFlag}" @click="selMenu(7)" value="7"><a
-          href="javascript:void(0)">数据报表</a></li>
+        <li :class="{active:menuSelFlag.systemFlag}" @click="selMenu(6)">
+          <a href="javascript:void(0)">系统配置</a>
+        </li>
+        <!--<li :class="{active:menuSelFlag.authorityFlag}" @click="selMenu(7)">
+          <a href="javascript:void(0)">权限类目</a>
+        </li>-->
+        <li :class="{active:menuSelFlag.dataReportFlag}" @click="selMenu(8)" value="7">
+          <a href="javascript:void(0)">数据报表</a>
+        </li>
       </ul>
     </el-col>
     <el-col :span="21">
@@ -44,6 +52,7 @@
           helpFlag: false,
           serviceFlag: false,
           systemFlag: false,
+          authorityFlag: false,
           dataReportFlag: false
         },
       }
@@ -60,6 +69,7 @@
           this.menuSelFlag.helpFlag = false;
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
           this.$router.push("/index/user");
         } else if (index == 2) {
@@ -69,7 +79,9 @@
           this.menuSelFlag.helpFlag = false;
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
+          this.$router.push("/index/device");
         } else if (index == 3) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
@@ -77,6 +89,7 @@
           this.menuSelFlag.helpFlag = false;
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
         } else if (index == 4) {
           this.menuSelFlag.userFlag = false;
@@ -85,6 +98,7 @@
           this.menuSelFlag.helpFlag = true;
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
         } else if (index == 5) {
           this.menuSelFlag.userFlag = false;
@@ -93,7 +107,9 @@
           this.menuSelFlag.helpFlag = false;
           this.menuSelFlag.serviceFlag = true;
           this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
+          this.$router.push("/index/customerService");
         } else if (index == 6) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
@@ -101,6 +117,7 @@
           this.menuSelFlag.helpFlag = false;
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = true;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
           this.$router.push("/index/system");
         } else if (index == 7) {
@@ -110,6 +127,17 @@
           this.menuSelFlag.helpFlag = false;
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = true;
+          this.menuSelFlag.dataReportFlag = false;
+          this.$router.push("/index/authority");
+        } else if (index == 8) {
+          this.menuSelFlag.userFlag = false;
+          this.menuSelFlag.deviceFlag = false;
+          this.menuSelFlag.feedbackFlag = false;
+          this.menuSelFlag.helpFlag = false;
+          this.menuSelFlag.serviceFlag = false;
+          this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = true;
         } else {
           this.menuSelFlag.userFlag = false;
@@ -118,11 +146,11 @@
           this.menuSelFlag.helpFlag = false;
           this.menuSelFlag.serviceFlag = false;
           this.menuSelFlag.systemFlag = false;
+          this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
         }
       },
       config(data) {
-        console.log(">>>>>"+data);
         if (data && Number(data)) {
           this.selMenu(data);
         }

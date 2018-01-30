@@ -156,35 +156,54 @@ Vue.prototype.$prompt = MessageBox.prompt
 Vue.prototype.$notify = Notification
 Vue.prototype.$message = Message
 
+Vue.prototype.isExist = function(opt) {
+  let flag = false;
+  if (null != opt && '' != opt && 'null' != opt && typeof opt != 'undefined') {
+    flag = true;
+  }
+  return flag;
+};
+
+Vue.prototype.isPhone = function(phoneNum){
+  let flag = false;
+  if(phoneNum && Number(phoneNum)){
+    let reg = /^1[34578][0-9]{9}$/;
+    flag = reg.test(phoneNum);
+  }
+  return flag;
+};
 //Vue.http.options.emulateJSON = true;
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    console.log("进入前置路由[校验用户的token是否已经失效]");
-    let token = sessionStorage.getItem('token')
-    console.log("memberToken["+token+"]");
+    let token = localStorage.getItem('memberInfo');
     if(token && '' != token && 'null' != token && null != token && typeof token != "undefined"){//调用接口校验token是否失效
       next();
     }else{//跳转到登录界面
       router.push({path:'/login'});
     }
   }else{
-    console.log("进入前置路由但是不需要做登录校验");
     next();
   }
 });
 
-Vue.http.interceptors.push((request, next) => {
-  let token=sessionStorage.getItem('token');
-  if(token && '' != token && 'null' != token && null != token && typeof token != "undefined"){
-    sessionStorage.setItem("token",token);
+/*Vue.http.interceptors.push((request, next) => {
+  let member=localStorage.getItem('memberInfo');
+  if(member && '' != member && 'null' != member && null != member && typeof member != "undefined"){
+    let memberJson = JSON.parse(member);
+    let token = memberJson.token;
+    if(!token || '' == token){
+      this.$router.push("/login");
+    }
+  }else{
+    this.$router.push("/login");
   }
   next((response) => {
     //在响应之后传给then之前对response进行修改和逻辑判断。对于token时候已过期的判断，就添加在此处，页面中任何一次http请求都会先调用此处方法
     return response;
   });
 
-});
+});*/
 
 /* eslint-disable no-new */
 new Vue({

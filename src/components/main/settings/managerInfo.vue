@@ -1,45 +1,45 @@
 <template>
-    <div class="manager">
-      <el-row class="row">
-        <el-col :span="6">
-          <el-breadcrumb separator-class="el-icon-d-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/index/user' }">达芬奇睡袋</el-breadcrumb-item>
-            <el-breadcrumb-item>个人信息</el-breadcrumb-item>
-          </el-breadcrumb>
-        </el-col>
-      </el-row>
+  <div class="manager">
+    <el-row class="row">
+      <el-col :span="6">
+        <el-breadcrumb separator-class="el-icon-d-arrow-right">
+          <el-breadcrumb-item :to="{ path: '/index/user' }">达芬奇睡袋</el-breadcrumb-item>
+          <el-breadcrumb-item>个人信息</el-breadcrumb-item>
+        </el-breadcrumb>
+      </el-col>
+    </el-row>
 
-      <el-row class="row">
-        <el-col :span="24">
-          <div class="pwdBody">
-            <div class="configPwd">
-              <el-input v-model.trim="customName" placeholder="" class="configInput">
-                <template slot="prepend">姓名</template>
-              </el-input>
-            </div>
-
-            <div class="configPwd">
-              <el-input v-model.trim="customNickName" placeholder="" class="configInput">
-                <template slot="prepend">昵称</template>
-              </el-input>
-            </div>
-
-            <div class="configPwd">
-              <el-input v-model.trim="customTel" placeholder="" class="configInput">
-                <template slot="prepend">手机号</template>
-              </el-input>
-            </div>
+    <el-row class="row">
+      <el-col :span="24">
+        <div class="pwdBody">
+          <div class="configPwd">
+            <el-input v-model.trim="customName" placeholder="" clearable>
+              <template slot="prepend">姓名</template>
+            </el-input>
           </div>
-        </el-col>
-      </el-row>
 
-      <el-row class="row">
-        <el-col :span="24" class="btnPostion">
-          <el-button type="primary" @click="update">确认</el-button>
-          <el-button type="danger" plain>返回</el-button>
-        </el-col>
-      </el-row>
-    </div>
+          <div class="configPwd">
+            <el-input v-model.trim="customNickName" placeholder="" clearable>
+              <template slot="prepend">昵称</template>
+            </el-input>
+          </div>
+
+          <div class="configPwd">
+            <el-input v-model.trim="customTel" placeholder="" clearable>
+              <template slot="prepend">手机号</template>
+            </el-input>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row class="row">
+      <el-col :span="24" class="btnPostion">
+        <el-button type="primary" @click="update">确认</el-button>
+        <el-button type="danger" plain @click="turnBack">返回</el-button>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -57,52 +57,79 @@
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      update(){
-        if(this.isExist(this.customName)){
-
-        }else{
+      update() {
+        if (!this.isExist(this.customName)) {
           alert("姓名不能为空");
           return;
         }
-        if(this.isExist(this.customNickName)){
-
-        }else{
+        if (!this.isExist(this.customNickName)) {
           alert("昵称不能为空");
           return;
         }
-        if(this.isExist(this.customTel)){
-
-        }else{
+        if (!this.isExist(this.customTel)) {
           alert("手机号不能为空");
           return;
         }
-        let url = '/api/admin/updateAdminPassWord';
-        let data = {
-          id:'',
-          oldPassWord : '',
-          newPassWord : '',
-          token : ''
-        };
-        this.$http.post(url,data).then(function(data){
-          console.log(">>>>"+data);
-        },function(err){
-          console.log("接口错误:",err);
-        })
-      },
-      isExist(opt) {
-        let flag = false;
-        if (null != opt && '' != opt && 'null' != opt && typeof opt != 'undefined') {
-          flag = true;
+        if (!this.isPhone(this.customTel)) {
+          alert("手机号不规范");
+          return;
         }
-        return flag;
+
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+
+          let url = '/api/admin/updateAdminInfo';
+          let data = {
+            id: memberJson.id,
+            name: this.customName,
+            nickName: this.customNickName,
+            phone: this.customTel,
+            token: memberJson.token
+          };
+          this.$http.post(url, data).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body.msg);
+                alert("个人信息修改成功");
+                let member = localStorage.getItem("memberInfo");
+                if (this.isExist(member)) {
+                  let memberJson = JSON.parse(member);
+                  memberJson.name = this.customName;
+                  memberJson.nickName = this.customNickName;
+                  memberJson.phone = this.customTel;
+
+                  localStorage.setItem("memberInfo", JSON.stringify(memberJson));
+                }
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      turnBack() {
+        this.$router.push({path: '/index/user'});
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config",11);
-      this.customName = window.userName;
-      this.customNickName = window.nickName;
-      this.customTel = window.phone;
+      this.$emit("config", 11);
+      let member = localStorage.getItem('memberInfo');
+      if (this.isExist(member)) {
+        let memberJson = JSON.parse(member);
+        this.customName = memberJson.userName;
+        this.customNickName = memberJson.nickName;
+        this.customTel = memberJson.phone;
+      }
+
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}
@@ -129,23 +156,24 @@
     box-shadow: 0px 0px 5px rgba(204, 204, 204, 0.349019607843137);
   }
 
-  .configPwd{
-    padding-top:1.5rem;
-    padding-left:5rem;
+  .configPwd {
+    padding-top: 1.5rem;
+    padding-left: 5rem;
   }
 
-  .configPwd:last-child{
+  .configPwd:last-child {
     padding-bottom: 1.5rem;
   }
 
-  .manager .row .el-input-group__prepend{
-    width:52px;
+  .manager .row .el-input-group__prepend {
+    width: 52px;
   }
 
-  .manager .row .el-input__inner{
-    width:13.75rem;
+  .manager .row .el-input {
+    width: 20rem;
   }
-  .btnPostion{
+
+  .btnPostion {
     text-align: center;
   }
 </style>

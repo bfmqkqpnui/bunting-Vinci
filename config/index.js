@@ -30,6 +30,13 @@ module.exports = {
         pathRewrite: {
           '^/localApi': ''
         }
+      },
+      '/shellApi': {
+        target: 'http://popboy1983.51vip.biz',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/shellApi': ''
+        }
       }
     },
 

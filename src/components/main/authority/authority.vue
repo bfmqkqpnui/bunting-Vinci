@@ -1,18 +1,17 @@
-<!-- vue模板 -->
 <template>
   <div>
     <el-row class="row">
       <el-col :span="6">
         <el-breadcrumb separator-class="el-icon-d-arrow-right">
-          <el-breadcrumb-item :to="{path:'/index/user'}">达芬奇睡袋</el-breadcrumb-item>
-          <el-breadcrumb-item>系统配置</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/index/user' }">达芬奇睡袋</el-breadcrumb-item>
+          <el-breadcrumb-item>权限类目</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
 
     <el-row class="row">
       <el-col :span="6">
-        <el-button type="primary" plain>添加</el-button>
+        <el-button type="primary" plain @click="add">添加</el-button>
       </el-col>
     </el-row>
 
@@ -20,59 +19,70 @@
       <el-col :span="23">
         <table border="1">
           <tr align="center">
-            <td width="10%">#</td>
-            <td width="10%">角色</td>
-            <td width="50%">权限</td>
-            <td width="30%">操作</td>
+            <td width="10%">编号</td>
+            <td width="70%">类目名称</td>
+            <td>操作</td>
           </tr>
 
           <tbody>
-          <tr align="center" v-for="(item,index) in systemList">
+
+          <tr align="center" v-if="tableList.length" v-for="(item,index) in tableList">
             <td v-text="index+1"></td>
-            <td v-text="item.roleName"></td>
-            <td>{{item.roleOptionList | showRoleName}}</td>
+            <td v-text="item.optionName"></td>
             <td>
-              <a href="javascript:void(0)">管理</a>
-              <a href="javascript:void(0)">查看</a>
-              <a href="javascript:void(0)">删除</a>
+              <router-link :to="{path:'/index/authority/operation',query: {name: item.optionName,selValue:item.correlation}}">更新</router-link>
             </td>
           </tr>
+
           </tbody>
         </table>
+      </el-col>
+    </el-row>
+
+    <el-row class="row">
+      <el-col :span="24">
+        <pageComponent :resultCount="resultCount" :currentPage='currentPage' @handleCurrentChange="handleCurrentChange" @handleSizeChange="handleSizeChange"></pageComponent>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+  import pageComponent from '@/components/pagination/paginationFull'
   //Js部分尽量采用ES6语法，webpack babel插件会转义兼容
   export default {
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
+        tableList: [],
         resultCount: 0,     // 记录总条数
         display: 10,   // 每页显示条数
         currentPage: 1,   // 当前的页数
-        systemList: []
       }
     },
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      config() {
+      config(pageIndex,pageSize) {
         let member = localStorage.getItem('memberInfo');
         if (this.isExist(member)) {
           let memberJson = JSON.parse(member);
 
-          let url = '/api/role/queryAllRole';
+          let url = '/api/role/queryAllRoleOptions';
           let params = {
+            pageIndex : pageIndex || 1,
+            pageSize : pageSize || 10,
             token: memberJson.token
           };
+
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
-                this.systemList = data.body.data;
+                console.log(data.body.data);
+                this.tableList = data.body.data.result;
+                this.resultCount = data.body.data.resultCount;
+                this.currentPage = data.body.data.pageIndex;
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
@@ -87,29 +97,32 @@
           })
         }
       },
-      add() {
-        this.$router.push({path: '/index/authority/operation'});
+      handleCurrentChange(currentPage){
+        console.log(`当前页:`+currentPage);
+        if(currentPage && Number(currentPage)){
+          this.currentPage = currentPage;
+          this.config(this.currentPage,this.display);
+        }
       },
+      handleSizeChange(pageSize){
+        console.log(`当前记录条数: `+pageSize);
+        if(pageSize && Number(pageSize)){
+          this.display = pageSize;
+
+          this.config(this.currentPage,this.display);
+        }
+      },
+      add(){
+        this.$router.push({path : '/index/authority/operation'});
+      }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config", 6);
       this.config();
-    }
-    ,
+      this.$emit("config", 7);
+    },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {},
-    filters: {
-      showRoleName(list) {
-        let content = '';
-        if (list && list.length > 0) {
-          for (let key in list) {
-            content += list[key].optionName+"、";
-          }
-        }
-        return content.substr(0,content.length-1);
-      }
-    }
+    components: {pageComponent}
   }
 </script>
 

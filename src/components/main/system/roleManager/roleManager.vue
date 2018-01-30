@@ -4,7 +4,8 @@
       <el-col :span="6">
         <el-breadcrumb separator-class="el-icon-d-arrow-right">
           <el-breadcrumb-item :to="{ path: '/index/user' }">达芬奇睡袋</el-breadcrumb-item>
-          <el-breadcrumb-item>密码修改</el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/index/system' }">系统配置</el-breadcrumb-item>
+          <el-breadcrumb-item> 角色权限管理</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
@@ -13,20 +14,25 @@
       <el-col :span="24">
         <div class="pwdBody">
           <div class="configPwd">
-            <el-input v-model.trim="configPwd" placeholder="" type="password" clearable>
-              <template slot="prepend" class="prepend">原始密码</template>
-            </el-input>
+            <span>角色：总部报表角色</span>
           </div>
 
           <div class="configPwd">
-            <el-input v-model.trim="newPwd" placeholder="" type="password" clearable>
-              <template slot="prepend" class="prepend">新密码</template>
-            </el-input>
+            <span>权限项：</span>
+            <el-checkbox-group v-model="checkedRoles">
+              <el-checkbox v-for="role in roles" :label="role" :key="role" border></el-checkbox>
+            </el-checkbox-group>
           </div>
 
           <div class="configPwd">
-            <el-input v-model.trim="repeatPwd" placeholder="" type="password" clearable>
-              <template slot="prepend" class="prepend">重复密码</template>
+            <span>添加账户：</span>
+          </div>
+
+          <div class="configPwd">
+            <el-input v-model.trim="acountName" placeholder="账户名" clearable>
+            </el-input>
+
+            <el-input v-model.trim="acountPwd" placeholder="密码" type="password" clearable>
             </el-input>
           </div>
         </div>
@@ -48,82 +54,44 @@
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
-        configPwd: '',
-        newPwd: '',
-        repeatPwd: '',
-        minlength : 4
+        roles: [],
+        acountName : '',
+        acountPwd : ''
       }
     },
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      update() {
-        if (!this.isExist(this.configPwd)) {
-          alert("原始密码不能为空");
-          return;
-        }
-        if (!this.isExist(this.newPwd)) {
-          alert("新密码不能为空");
-          return;
-        }
-        if (this.newPwd.length < 4) {
-          alert("新密码长度至少4位");
-          return;
-        }
-        if (this.newPwd != this.repeatPwd) {
-          alert("新密码和重复密码不一致");
-          return;
-        }
-
-        let member=localStorage.getItem('memberInfo');
-        if(this.isExist(member)){
+      config() {
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
           let memberJson = JSON.parse(member);
-          this.name = memberJson.userName;
-          this.roleId = memberJson.nickName;
-
-          let url = '/api/admin/updateAdminPassWord';
-          //url = '/shellApi/admin/updateAdminPassWord';
-          //url = '/localApi/admin/updateAdminPassWord';
+          let url = '/api/role/queryAllRole';
           let params = {
-            "id": memberJson.id,
-            "oldPassWord": this.configPwd,
-            "newPassWord": this.newPwd,
-            "token": memberJson.token
+            token: memberJson.token
           };
           this.$http.post(url, params).then(function (data) {
-            this.configInputValue();
-            if(data.ok){
-              if(data.body.result == 0){
+            if (data.ok) {
+              if (data.body.result == 0) {
                 console.log(data.body.data);
-                alert("密码修改成功");
-              }else{
-                if(data.body.result == 2){
+              } else {
+                if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
-                }else{
+                } else {
                   alert(data.body.msg);
                 }
               }
             }
           }, function (err) {
-            this.configInputValue();
             console.log("接口错误:", err);
           })
         }
-      },
-      configInputValue(){
-        this.configPwd = '';
-        this.newPwd = '';
-        this.repeatPwd = '';
-      },
-      turnBack(){
-        this.$router.push({path : '/index/user'});
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config", 11);
 
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
