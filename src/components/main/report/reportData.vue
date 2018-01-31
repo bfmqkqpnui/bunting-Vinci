@@ -27,7 +27,7 @@
           </el-row>
 
           <el-row class="main-row">
-            <el-col :span="6">
+            <el-col :span="9">
               <div class="block">
                 <el-date-picker
                   v-model="dateList"
@@ -38,7 +38,7 @@
                 </el-date-picker>
               </div>
             </el-col>
-            <el-col :span="3" :offset="1">
+            <el-col :span="3">
               <el-button type="primary" icon="el-icon-search">搜索</el-button>
             </el-col>
           </el-row>
@@ -243,6 +243,9 @@
     padding: 1rem 1rem 0 1rem;
   }
 
+  .block{
+    margin-right:1rem;
+  }
   .block, table {
     margin-left: 1rem;
   }

@@ -64,10 +64,27 @@
     methods: {
       initEditor(){
         let editor = new E('#editorElem');
+        // 自定义菜单配置
+        editor.customConfig.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'italic',  // 斜体
+          'underline',  // 下划线
+          'strikeThrough',  // 删除线
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          'justify',  // 对齐方式
+          'image',  // 插入图片
+        ];
+        editor.customConfig.showLinkImg = false;
         editor.customConfig.onchange = (html) => {
           this.editorContent = html
         };
+        editor.customConfig.pasteFilterStyle = false;
         editor.customConfig.uploadImgShowBase64 = true;
+        // 通过 url 参数配置 debug 模式。url 中带有 wangeditor_debug_mode=1 才会开启 debug 模式
+        editor.customConfig.debug = location.href.indexOf('wangeditor_debug_mode=1') > 0
+
         editor.create();
       },
       getContent: function () {
