@@ -80,27 +80,18 @@
           let memberJson = JSON.parse(member);
 
           let url = '/api/admin/updateAdminInfo';
-          let data = {
+          let params = {
             id: memberJson.id,
             name: this.customName,
             nickName: this.customNickName,
             phone: this.customTel,
             token: memberJson.token
           };
-          this.$http.post(url, data).then(function (data) {
+          this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body.msg);
                 alert("个人信息修改成功");
-                let member = localStorage.getItem("memberInfo");
-                if (this.isExist(member)) {
-                  let memberJson = JSON.parse(member);
-                  memberJson.name = this.customName;
-                  memberJson.nickName = this.customNickName;
-                  memberJson.phone = this.customTel;
-
-                  localStorage.setItem("memberInfo", JSON.stringify(memberJson));
-                }
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
@@ -117,19 +108,43 @@
       },
       turnBack() {
         this.$router.push({path: '/index/user'});
+      },
+      config(){
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+          let url = '/api/admin/queryById';
+          let params = {
+            id: memberJson.id,
+            token: memberJson.token
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                this.customName = data.body.data.name;
+                this.customNickName = data.body.data.nickName;
+                this.customTel = data.body.data.phone;
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
       this.$emit("config", 11);
-      let member = localStorage.getItem('memberInfo');
-      if (this.isExist(member)) {
-        let memberJson = JSON.parse(member);
-        this.customName = memberJson.name;
-        this.customNickName = memberJson.nickName;
-        this.customTel = memberJson.phone;
-      }
-
+      this.config();
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

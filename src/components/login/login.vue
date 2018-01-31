@@ -13,14 +13,14 @@
 
         <div class="input-group mb15">
 					<span class="input-group-addon">
-            <i class="el-icon-star-off"></i>
+            <i class="glyphicon glyphicon-user"></i>
           </span>
           <input type="text" class="form-control" placeholder="用户名" v-model.trim="userName">
         </div>
         <!-- input-group -->
         <div class="input-group mb15">
 					<span class="input-group-addon">
-            <i class="el-icon-suoding2"></i>
+            <i class="glyphicon glyphicon-lock"></i>
           </span>
           <input type="password" class="form-control" placeholder="密码" v-model.trim="pwd" @keyup.enter="login">
         </div>
@@ -112,6 +112,7 @@
   }
 </script>
 
+<style lang="css" src="../../../static/css/bootstrap.min.css" scoped></style>
 <style>
   .panel {
     margin-bottom: 20px;
@@ -125,7 +126,7 @@
     box-shadow: none;
     font-size: 13px;
     color: #636E7B;
-    height: 22.25rem;
+    height: auto;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -210,30 +211,6 @@
     vertical-align: middle;
   }
 
-  .input-group-addon {
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1;
-    color: #555;
-    text-align: center;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  .input-group-addon {
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
-    font-size: 13px;
-    background-color: #f7f7f7;
-  }
-
-  .input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group > .btn, .input-group-btn:last-child > .dropdown-toggle, .input-group-btn:first-child > .btn:not(:first-child), .input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
 
   button, input, optgroup, select, textarea {
     margin: 0;
@@ -245,75 +222,6 @@
     line-height: normal;
   }
 
-  .form-control {
-    display: block;
-    width: 100%;
-    height: 34px;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  }
-
-  .form-control {
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    padding: 10px;
-    height: auto;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    font-size: 13px;
-  }
-
-  .form-control:focus {
-    border-color: #ccc;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    outline: 0;
-  }
-
-  .input-group .form-control {
-    position: relative;
-    z-index: 2;
-    float: left;
-    width: 16.4rem;
-    margin-bottom: 0;
-  }
-
-  .glyphicon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  .glyphicon-user:before {
-    content: "\e008";
-  }
-
-  .glyphicon-lock:before {
-    content: "\e033";
-  }
 
   .pull-left {
     float: left !important;
@@ -346,26 +254,6 @@
     font-family: inherit;
     font-size: inherit;
     line-height: inherit;
-  }
-
-  .btn {
-    display: inline-block;
-    padding: 6px 12px;
-    margin-bottom: 0;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.42857143;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
   }
 
   .btn-success {

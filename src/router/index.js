@@ -7,6 +7,7 @@ import index from '@/components/index/index'
 import loginComponent from '@/components/login/login'
 
 import userComponent from '@/components/main/user/user'
+import feedbackComponent from '@/components/main/user/feedback/feedback'
 
 import systemComponent from '@/components/main/system/system'
 import roleManagerComponent from '@/components/main/system/roleManager/roleManager'
@@ -21,6 +22,11 @@ import authorityComponent from '@/components/main/authority/authority'
 import authorOperationComponent from '@/components/main/authority/operation/authorOperation'
 
 import deviceComponent from '@/components/main/device/device'
+import deviceDataComponent from '@/components/main/device/deviceData/deviceData'
+
+import reportDataComponent from '@/components/main/report/reportData'
+
+import helpComponent from '@/components/main/help/help'
 Vue.use(Router)
 
 export default new Router({
@@ -50,6 +56,13 @@ export default new Router({
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
           component: userComponent
+        },
+        {
+          path: 'feedback',
+          meta: {
+            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+          },
+          component: feedbackComponent
         },
         {
           path: 'system',
@@ -114,7 +127,27 @@ export default new Router({
           },
           component: deviceComponent
         },
-
+        {
+          path: 'device/deviceData',
+          meta: {
+            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+          },
+          component: deviceDataComponent
+        },
+        {
+          path: 'report',
+          meta: {
+            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+          },
+          component: reportDataComponent
+        },
+        {
+          path: 'help',
+          meta: {
+            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+          },
+          component: helpComponent
+        },
       ]
     }
   ]

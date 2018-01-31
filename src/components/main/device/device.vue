@@ -46,37 +46,37 @@
       <el-col :span="23">
         <table border="1">
           <tr align="center">
-            <td width="10%">批量操作</td>
-            <td width="5%">编号</td>
+            <td width="10%">编号</td>
             <td width="15%">用户名</td>
             <td width="10%">昵称</td>
             <td width="15%">手机号</td>
             <td width="10%">身份</td>
             <td width="10%">设备状态</td>
             <td width="15%">设备号</td>
-            <td width="15%">操作</td>
+            <td width="20%">操作</td>
           </tr>
 
           <tbody>
           <tr align="center">
             <td>
-              <el-checkbox v-model="checkedList" @selection-change="change" label="1"></el-checkbox>
+              <el-checkbox v-model="checkedList" label="1"></el-checkbox>
             </td>
-            <td>1</td>
             <td>张先生</td>
             <td>啊啊啊</td>
             <td>18589568526</td>
             <td>父亲</td>
             <td>已绑定</td>
             <td>55667788</td>
-            <td><a href="javascript:void(0)">查看</a> <a href="javascript:void(0)">删除</a></td>
+            <td>
+              <router-link :to="{path:'/index/device/deviceData'}">查看</router-link>
+              <a href="javascript:void(0)">删除</a>
+            </td>
           </tr>
 
           <tr align="center">
             <td>
-              <el-checkbox v-model="checkedList" @selection-change="change" label="2"></el-checkbox>
+              <el-checkbox v-model="checkedList" label="2"></el-checkbox>
             </td>
-            <td>2</td>
             <td>李女士</td>
             <td>啦啦啦</td>
             <td>15525698569</td>
@@ -92,7 +92,7 @@
 
     <el-row class="row">
       <el-col :span="24">
-        <pageComponent></pageComponent>
+        <pageComponent :resultCount="resultCount" :currentPage='currentPage'></pageComponent>
       </el-col>
     </el-row>
   </div>
@@ -117,16 +117,16 @@
           }
         ],
         selStatus: '',
-        checkedList: []
+        checkedList: [],
+        resultCount: 0,     // 记录总条数
+        display: 10,   // 每页显示条数
+        currentPage: 1,   // 当前的页数
       }
     },
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      change(){
-
-      },
       delAll() {
         console.log(this.checkedList);
       }

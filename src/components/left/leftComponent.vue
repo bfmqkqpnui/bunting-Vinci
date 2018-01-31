@@ -91,6 +91,7 @@
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
+          this.$router.push("/index/feedback");
         } else if (index == 4) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
@@ -100,6 +101,7 @@
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = false;
+          this.$router.push("/index/help");
         } else if (index == 5) {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;
@@ -139,6 +141,7 @@
           this.menuSelFlag.systemFlag = false;
           this.menuSelFlag.authorityFlag = false;
           this.menuSelFlag.dataReportFlag = true;
+          this.$router.push("/index/report");
         } else {
           this.menuSelFlag.userFlag = false;
           this.menuSelFlag.deviceFlag = false;

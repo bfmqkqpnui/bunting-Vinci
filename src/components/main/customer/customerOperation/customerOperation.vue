@@ -53,12 +53,14 @@
 
           <div class="configPwd">
             <span>账户名</span>
-            <el-input v-model.trim="accountName" placeholder="" clearable>
-            </el-input>
+            <el-input v-model.trim="accountName" placeholder="" v-if="adminId && adminId != ''" disabled
+                      readonly></el-input>
 
-            <span>密码</span>
-            <el-input v-model.trim="accountPwd" placeholder="" type="password" clearable>
-            </el-input>
+            <el-input v-model.trim="accountName" placeholder="" clearable v-else></el-input>
+
+
+            <span v-if="!adminId">密码</span>
+            <el-input v-model.trim="accountPwd" placeholder="" type="password" clearable v-if="!adminId"></el-input>
           </div>
         </div>
       </el-col>
@@ -66,7 +68,8 @@
 
     <el-row class="row">
       <el-col :span="24" class="btnPostion">
-        <el-button type="primary" @click="update">确认</el-button>
+        <el-button type="primary" @click="update" v-if="adminId && adminId != ''">更新</el-button>
+        <el-button type="primary" @click="add" v-else>新增</el-button>
         <el-button type="danger" plain @click="turnBack">返回</el-button>
       </el-col>
     </el-row>
@@ -79,14 +82,14 @@
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
-        adminId : '',
-        defaultName : '',
-        defaultTel : '',
-        defaultNickName : '',
-        roles : [],
-        accountName : '',
-        accountPwd : '',
-        roleSel : ''
+        adminId: '',
+        defaultName: '',
+        defaultTel: '',
+        defaultNickName: '',
+        roles: [],
+        accountName: '',
+        accountPwd: '',
+        roleSel: ''
       }
     },
     //计算属性
@@ -99,16 +102,16 @@
         // 将数据放在当前组件的数据内
         this.adminId = roleId;
       },
-      queryAllRoles(){
+      queryAllRoles() {
         let member = localStorage.getItem('memberInfo');
         if (this.isExist(member)) {
           let memberJson = JSON.parse(member);
 
           let url = '/api/role/queryAllRoleOptions';
           let params = {
-            pageIndex : 1,
-            pageSize : 50,
-            token : memberJson.token
+            pageIndex: 1,
+            pageSize: 50,
+            token: memberJson.token
           };
 
           this.$http.post(url, params).then(function (data) {
@@ -116,10 +119,10 @@
               if (data.body.result == 0) {
                 let list = data.body.data.result;
                 let arr = [];
-                for (let i in list){
+                for (let i in list) {
                   let json = {
-                    value : list[i].id,
-                    label : list[i].optionName
+                    value: list[i].id,
+                    label: list[i].optionName
                   };
                   arr.push(json);
                 }
@@ -138,29 +141,142 @@
           })
         }
       },
-      update(){
+      update() {
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member) && this.defaultVilidata()) {
+          let memberJson = JSON.parse(member);
+          let url = '/api/admin/updateAdminInfo';
+          let params = {
+            id: this.adminId,
+            name: this.defaultName,
+            nickName: this.defaultNickName,
+            phone: this.defaultTel,
+            roleId: this.roleSel,
+            token: memberJson.token
+          };
 
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                alert(data.body.msg);
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
       },
-      turnBack(){
-        this.$router.push({path:'/index/acountManager'});
+      defaultVilidata() {
+        var flag = false;
+        if (!this.isExist(this.defaultName)) {
+          alert("名字不能为空");
+          return flag;
+        }
+        if (!this.isExist(this.defaultTel)) {
+          alert("手机号不能为空");
+          return flag;
+        }
+        if (!this.isPhone(this.defaultTel)) {
+          alert("手机号不规范");
+          return flag;
+        }
+        if (!this.isExist(this.defaultNickName)) {
+          alert("昵称不能为空");
+          return flag;
+        }
+        if (!this.isExist(this.roleSel)) {
+          alert("请选择对应角色");
+          return flag;
+        }
+        flag = true;
+        return flag;
       },
-      queryByAdminId(){
-        if(this.adminId && this.adminId != ''){
+      accountVilidata() {
+        var flag = false;
+        if (!this.isExist(this.accountName)) {
+          alert("账号不能为空");
+          return flag;
+        }
+        if (!this.isExist(this.accountPwd)) {
+          alert("密码不能为空");
+          return flag;
+        }
+        if (this.accountPwd.length < 4) {
+          alert("密码至少4位");
+          return flag;
+        }
+        flag = true;
+        return flag;
+      },
+      add() {
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member) && this.defaultVilidata() && this.accountVilidata()) {
+          let memberJson = JSON.parse(member);
+
+          let url = '/api/admin/updateAdminInfo';
+          let params = {
+            name: this.defaultName,
+            nickName: this.defaultNickName,
+            phone: this.defaultTel,
+            roleId: this.roleSel,
+            userName: this.accountName,
+            passWord: this.accountPwd,
+            token: memberJson.token
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                alert(data.body.msg);
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      turnBack() {
+        this.$router.push({path: '/index/acountManager'});
+      },
+      queryByAdminId() {
+        if (this.adminId && this.adminId != '') {
           let member = localStorage.getItem('memberInfo');
           if (this.isExist(member)) {
             let memberJson = JSON.parse(member);
 
-            let url = '/api/role/queryAllRoleOptions';
+            let url = '/api/admin/queryById';
             let params = {
-              pageIndex : 1,
-              pageSize : 50,
-              token : memberJson.token
+              id: memberJson.id,
+              token: memberJson.token
             };
 
             this.$http.post(url, params).then(function (data) {
               if (data.ok) {
                 if (data.body.result == 0) {
-                 console.log(data.body);
+                  console.log(data.body);
+                  this.defaultName = data.body.data.name;
+                  this.defaultNickName = data.body.data.nickName;
+                  this.defaultTel = data.body.data.phone;
+
+                  this.accountName = data.body.data.userName;
+                  this.accountPwd = data.body.data.passWord;
+                  this.roleSel = data.body.data.roleId;
                 } else {
                   if (data.body.result == 2) {
                     localStorage.removeItem("memberInfo");
@@ -179,11 +295,11 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config",51);
+      this.$emit("config", 51);
       this.getParams();
       this.queryAllRoles();
-      if(this.adminId && this.adminId != ''){
-        console.log("00099999");
+      if (this.adminId && this.adminId != '') {
+        this.queryByAdminId();
       }
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
@@ -229,7 +345,7 @@
     width: 20rem;
   }
 
-  .configPwd .el-select{
+  .configPwd .el-select {
     width: 20rem;
   }
 
@@ -237,7 +353,7 @@
     text-align: center;
   }
 
-  .configPwd .title{
+  .configPwd .title {
     display: inline-block;
     line-height: 1;
     white-space: nowrap;
@@ -256,9 +372,10 @@
     background-color: rgba(223, 74, 130, 1);
     border-radius: 20px;
     font-size: 12px;
+    cursor: default;
   }
 
-  .configPwd .selectTitle{
+  .configPwd .selectTitle {
     background-color: #f5f7fa;
     color: #909399;
     vertical-align: middle;

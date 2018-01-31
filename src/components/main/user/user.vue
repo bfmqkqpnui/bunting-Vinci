@@ -61,7 +61,7 @@
 
     <el-row class="row">
       <el-col :span="24">
-        <pageComponent></pageComponent>
+        <pageComponent :resultCount="resultCount" :currentPage='currentPage'></pageComponent>
       </el-col>
     </el-row>
   </div>
@@ -74,7 +74,10 @@
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
-        input: ''
+        input: '',
+        resultCount: 0,     // 记录总条数
+        display: 10,   // 每页显示条数
+        currentPage: 1,   // 当前的页数
       }
     },
     //计算属性
