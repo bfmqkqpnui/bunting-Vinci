@@ -73,6 +73,7 @@ export default new Router({
         },
         {
           path: '/index/system/roleManager',
+          name: 'roleManager',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -101,6 +102,7 @@ export default new Router({
         },
         {
           path: '/index/acountManager/acountOperation',
+          name: 'acountOperation',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -115,6 +117,7 @@ export default new Router({
         },
         {
           path: '/index/authority/operation',
+          name : 'authorityOperation',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },

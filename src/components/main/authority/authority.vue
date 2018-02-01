@@ -30,7 +30,7 @@
             <td v-text="index+1"></td>
             <td v-text="item.optionName"></td>
             <td>
-              <router-link :to="{path:'/index/authority/operation',query: {name: item.optionName,selValue:item.correlation}}">更新</router-link>
+              <router-link :to="{name:'authorityOperation',params: {name: item.optionName,selValue:item.correlation}}">更新</router-link>
             </td>
           </tr>
 

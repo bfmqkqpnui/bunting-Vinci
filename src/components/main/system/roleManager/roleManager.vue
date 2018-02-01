@@ -14,7 +14,10 @@
       <el-col :span="24">
         <div class="pwdBody">
           <div class="configPwd">
-            <span>角色：<span v-text="roleName"></span></span>
+            <span>角色：
+              <span v-text="roleName" v-if="roleId && roleId != ''"></span>
+              <el-input v-else v-model="roleName"></el-input>
+            </span>
           </div>
 
           <div class="configPwd">
@@ -23,10 +26,11 @@
 
           <div class="configPwd">
             <el-checkbox-group v-model="checkedRoles" @change="handleCheckedRolesChange">
-              <el-checkbox v-for="role in roles" :label="role.id" :key="role.id" border>{{role.optionName}}</el-checkbox>
+              <el-checkbox v-for="(role,index) in roles" :label="role.id" :key="role.id" border>
+                {{role.optionName}}
+              </el-checkbox>
             </el-checkbox-group>
           </div>
-
         </div>
       </el-col>
     </el-row>
@@ -49,23 +53,23 @@
         checkedRoles: [],
         roles: [],
         roleId: '',
-        roleName : ''
+        roleName: ''
       }
     },
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      queryAllRoles(){
+      queryAllRoles() {
         let member = localStorage.getItem('memberInfo');
         if (this.isExist(member)) {
           let memberJson = JSON.parse(member);
 
           let url = '/api/role/queryAllRoleOptions';
           let params = {
-            pageIndex : 1,
-            pageSize : 50,
-            token : memberJson.token
+            pageIndex: 1,
+            pageSize: 50,
+            token: memberJson.token
           };
 
           this.$http.post(url, params).then(function (data) {
@@ -102,7 +106,7 @@
                 this.roleName = data.body.data.roleName;
                 let checkList = data.body.data.roleOptionList;
                 let arr = [];
-                for(var index in checkList){
+                for (var index in checkList) {
                   arr.push(checkList[index].id);
                 }
                 console.log(arr);
@@ -125,14 +129,14 @@
         this.$router.push({path: '/index/system'});
       },
       update() {
-        console.log("ok>>>>"+this.checkedRoles);
+        console.log("ok>>>>" + this.checkedRoles);
       },
-      handleCheckedRolesChange(){
+      handleCheckedRolesChange() {
 
       },
       getParams() {
         // 取到路由带过来的参数
-        let roleId = this.$route.query.roleId;
+        let roleId = this.$route.params.roleId;
         // 将数据放在当前组件的数据内
         this.roleId = roleId;
       }
@@ -141,7 +145,9 @@
     mounted() {
       this.queryAllRoles();
       this.getParams();
-      this.config();
+      if(this.roleId && !isNaN(this.roleId)){
+        this.config();
+      }
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {},
@@ -152,7 +158,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .pwdBody {
     font-family: 'Arial Normal', 'Arial';
     font-weight: 400;
@@ -192,5 +198,26 @@
 
   .btnPostion {
     text-align: center;
+  }
+
+  .el-checkbox-group .el-checkbox {
+    margin-bottom: 1rem;
+  }
+
+  .el-checkbox+.el-checkbox{
+    margin-left:0;
+  }
+
+  .el-checkbox.is-bordered.el-checkbox--small:first-child{
+    margin-right: 10px;
+  }
+
+  .el-checkbox-group{
+    min-width: 550px;
+    width:550px;
+  }
+  .el-checkbox.is-bordered+.el-checkbox.is-bordered{
+    margin-right: 10px;
+    margin-left:0;
   }
 </style>

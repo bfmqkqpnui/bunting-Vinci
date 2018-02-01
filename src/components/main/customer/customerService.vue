@@ -23,7 +23,8 @@
             <td width="10%">姓名</td>
             <td width="20%">联系方式</td>
             <td width="10%">账户名</td>
-            <td width="20%">角色</td>
+            <td width="10%">角色</td>
+            <td width="10%">状态</td>
             <td width="30%">操作</td>
           </tr>
 
@@ -34,8 +35,9 @@
             <td v-text="item.phone"></td>
             <td v-text="item.userName"></td>
             <td v-text="item.role.roleName"></td>
+            <td >{{item.status | showAccountStatus}}</td>
             <td>
-              <router-link :to="{path:'/index/acountManager/acountOperation',query:{adminId:1}}">管理</router-link>
+              <router-link :to="{name:'acountOperation',params:{adminId:1}}">管理</router-link>
               <a href="javascript:void(0)">启用</a>
               <a href="javascript:void(0)">禁用</a>
             </td>
@@ -85,7 +87,6 @@
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
-                console.log(data.body.data);
                 this.tableList = data.body.data.result;
                 this.resultCount = data.body.data.resultCount;
                 this.currentPage = data.body.data.pageIndex;
@@ -127,7 +128,22 @@
       this.config(this.currentPage,this.display);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {pageComponent}
+    components: {pageComponent},
+    filters:{
+      showAccountStatus(status){
+        let strStatus = '';
+        if(typeof status == 'number'){
+          if(status == 0){
+            strStatus = '禁用';
+          }else{
+            strStatus = '启用';
+          }
+        }else{
+          strStatus = '启用';
+        }
+        return strStatus;
+      }
+    }
   }
 </script>
 

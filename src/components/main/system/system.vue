@@ -12,7 +12,7 @@
 
     <el-row class="row">
       <el-col :span="6">
-        <el-button type="primary" plain>添加</el-button>
+        <el-button type="primary" plain @click="add">添加</el-button>
       </el-col>
     </el-row>
 
@@ -32,7 +32,7 @@
             <td v-text="item.roleName"></td>
             <td>{{item.roleOptionList | showRoleName}}</td>
             <td>
-              <router-link :to="{path:'/index/system/roleManager',query:{roleId:item.id}}">管理</router-link>
+              <router-link :to="{name:'roleManager',params:{roleId:item.id}}">管理</router-link>
               <a href="javascript:void(0)">删除</a>
             </td>
           </tr>
@@ -87,7 +87,7 @@
         }
       },
       add() {
-        this.$router.push({path: '/index/authority/operation'});
+        this.$router.push({path: '/index/system/roleManager'});
       },
     },
     //生命周期钩子：组件实例渲染完成时调用

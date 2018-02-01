@@ -98,7 +98,7 @@
     methods: {
       getParams() {
         // 取到路由带过来的参数
-        let roleId = this.$route.query.adminId;
+        let roleId = this.$route.params.adminId;
         // 将数据放在当前组件的数据内
         this.adminId = roleId;
       },
