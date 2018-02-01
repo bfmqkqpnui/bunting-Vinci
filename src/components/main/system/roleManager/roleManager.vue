@@ -25,7 +25,7 @@
           </div>
 
           <div class="configPwd">
-            <el-checkbox-group v-model="checkedRoles" @change="handleCheckedRolesChange">
+            <el-checkbox-group v-model="checkedRoles">
               <el-checkbox v-for="(role,index) in roles" :label="role.id" :key="role.id" border>
                 {{role.optionName}}
               </el-checkbox>
@@ -37,7 +37,8 @@
 
     <el-row class="row">
       <el-col :span="24" class="btnPostion">
-        <el-button type="primary" @click="update">确认</el-button>
+        <el-button type="primary" @click="update" v-if="roleId && roleId !=''">更新</el-button>
+        <el-button type="primary" @click="add" v-else>新增</el-button>
         <el-button type="danger" plain @click="turnBack">返回</el-button>
       </el-col>
     </el-row>
@@ -129,10 +130,71 @@
         this.$router.push({path: '/index/system'});
       },
       update() {
-        console.log("ok>>>>" + this.checkedRoles);
-      },
-      handleCheckedRolesChange() {
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
 
+          let url = '/api/role/updateRole';
+          let params = {
+            id: this.roleId,
+            roleName: this.roleName,
+            roleOptionIds: this.checkedRoles.toString(),
+            token: memberJson.token
+          };
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                this.roleName = data.body.data.roleName;
+                let checkList = data.body.data.roleOptionList;
+                let arr = [];
+                for (var index in checkList) {
+                  arr.push(checkList[index].id);
+                }
+                this.checkedRoles = arr;
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      add() {
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+
+          let url = '/api/role/insertRole';
+          let params = {
+            roleName: this.roleName,
+            roleOptionIds: this.checkedRoles.toString(),
+            token: memberJson.token
+          };
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                alert(data.body.msg);
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
       },
       getParams() {
         // 取到路由带过来的参数
@@ -145,7 +207,7 @@
     mounted() {
       this.queryAllRoles();
       this.getParams();
-      if(this.roleId && !isNaN(this.roleId)){
+      if (this.roleId && !isNaN(this.roleId)) {
         this.config();
       }
     },
@@ -204,20 +266,21 @@
     margin-bottom: 1rem;
   }
 
-  .el-checkbox+.el-checkbox{
-    margin-left:0;
+  .el-checkbox + .el-checkbox {
+    margin-left: 0;
   }
 
-  .el-checkbox.is-bordered.el-checkbox--small:first-child{
+  .el-checkbox.is-bordered.el-checkbox--small:first-child {
     margin-right: 10px;
   }
 
-  .el-checkbox-group{
+  .el-checkbox-group {
     min-width: 550px;
-    width:550px;
+    width: 550px;
   }
-  .el-checkbox.is-bordered+.el-checkbox.is-bordered{
+
+  .el-checkbox.is-bordered + .el-checkbox.is-bordered {
     margin-right: 10px;
-    margin-left:0;
+    margin-left: 0;
   }
 </style>

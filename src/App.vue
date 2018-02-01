@@ -44,5 +44,7 @@
     -o-text-overflow:ellipsis;
     -moz-text-overflow: ellipsis;
     -webkit-text-overflow: ellipsis;
+    font-size:14px;
   }
+
 </style>

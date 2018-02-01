@@ -37,9 +37,9 @@
             <td v-text="item.role.roleName"></td>
             <td >{{item.status | showAccountStatus}}</td>
             <td>
-              <router-link :to="{name:'acountOperation',params:{adminId:1}}">管理</router-link>
-              <a href="javascript:void(0)">启用</a>
-              <a href="javascript:void(0)">禁用</a>
+              <router-link :to="{name:'acountOperation',params:{adminId:item.id}}">管理</router-link>
+              <a href="javascript:void(0)" @click="setAccountStatus(1,item.id)">启用</a>
+              <a href="javascript:void(0)" @click="setAccountStatus(0,item.id)">禁用</a>
             </td>
           </tr>
           </tbody>
@@ -120,6 +120,38 @@
       },
       add(){
         this.$router.push({path:'/index/acountManager/acountOperation'})
+      },
+      setAccountStatus(status,adminId){
+        alert(">>>"+status+"["+adminId+"]");
+        let member = localStorage.getItem('memberInfo');
+        if(!isNaN(status) && this.isExist(member) && this.isExist(adminId)){
+          let memberJson = JSON.parse(member);
+          let url = '/api/admin/updateAdminStatus';
+
+          let params = {
+            id : adminId,
+            status : status,
+            token : memberJson.token
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                alert(data.body.msg);
+                this.config(this.currentPage,this.display);
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
       }
     },
     //生命周期钩子：组件实例渲染完成时调用

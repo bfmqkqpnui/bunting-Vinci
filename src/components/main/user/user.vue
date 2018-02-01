@@ -33,27 +33,30 @@
           </tr>
 
           <tbody>
-          <tr align="center">
-            <td>1</td>
-            <td>张先生</td>
-            <td>啊啊啊</td>
+          <tr align="center" v-for="(item,index) in tableList">
+            <td v-text="index+1"></td>
+            <td v-text="item.userName"></td>
+            <td v-text="item.nickname"></td>
             <td>18589568526</td>
-            <td>父亲</td>
-            <td>已绑定</td>
-            <td>55667788</td>
-            <td><a href="javascript:void(0)">查看</a> <a href="javascript:void(0)">删除</a></td>
+            <td v-text="item.identity"></td>
+            <td>{{item.bindingStatus | getDeviceStatus}}</td>
+            <td v-text="item.bagDeviceCode"></td>
+            <td>
+              <router-link :to="{name:'aaa',params:{userId:item.id}}">查看</router-link>
+              <a href="javascript:void(0)">删除</a>
+            </td>
           </tr>
 
-          <tr align="center">
+          <!--<tr align="center">
             <td>2</td>
             <td>李女士</td>
             <td>啦啦啦</td>
             <td>15525698569</td>
             <td>母亲</td>
             <td>未绑定</td>
-            <td>--</td>
+            <td>&#45;&#45;</td>
             <td><a href="javascript:void(0)">查看</a> <a href="javascript:void(0)">删除</a></td>
-          </tr>
+          </tr>-->
           </tbody>
         </table>
       </el-col>
@@ -78,18 +81,65 @@
         resultCount: 0,     // 记录总条数
         display: 10,   // 每页显示条数
         currentPage: 1,   // 当前的页数
+        tableList : []
       }
     },
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
-    methods: {},
+    methods: {
+      config() {
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+
+          let url = '/api/user/queryAll';
+          let params = {
+            pageIndex: this.currentPage,
+            pageSize: this.display,
+            token: memberJson.token
+          };
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body)
+                this.tableList = data.body.data.result;
+                this.resultCount = data.body.data.resultCount;
+                this.currentPage = data.body.data.pageIndex;
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+
+        }
+      }
+    },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config",1);
+      this.$emit("config", 1);
+      this.config();
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {pageComponent}
+    components: {pageComponent},
+    filters:{
+      getDeviceStatus(status){
+        let strStatus = '未绑定';
+        if(!isNaN(status)){
+          if(status == 1){
+            strStatus = '已绑定';
+          }
+        }
+        return strStatus;
+      }
+    }
   }
 </script>
 

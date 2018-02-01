@@ -33,7 +33,7 @@
             <td>{{item.roleOptionList | showRoleName}}</td>
             <td>
               <router-link :to="{name:'roleManager',params:{roleId:item.id}}">管理</router-link>
-              <a href="javascript:void(0)">删除</a>
+              <a href="javascript:void(0)" @click="delById(item.id)">删除</a>
             </td>
           </tr>
           </tbody>
@@ -89,6 +89,37 @@
       add() {
         this.$router.push({path: '/index/system/roleManager'});
       },
+      delById(id){
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+
+          if(this.isExist(id)){
+            let url = '/api/role/deleteRole';
+            let params = {
+              id : id,
+              token : memberJson.token
+            };
+
+            this.$http.post(url, params).then(function (data) {
+              if (data.ok) {
+                if (data.body.result == 0) {
+                  this.systemList = data.body.data;
+                } else {
+                  if (data.body.result == 2) {
+                    localStorage.removeItem("memberInfo");
+                    this.$router.push("/login");
+                  } else {
+                    alert(data.body.msg);
+                  }
+                }
+              }
+            }, function (err) {
+              console.log("接口错误:", err);
+            })
+          }
+        }
+      }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {

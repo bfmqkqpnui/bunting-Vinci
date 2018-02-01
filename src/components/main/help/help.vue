@@ -49,6 +49,7 @@
 
 <script>
   import E from 'wangeditor'
+  let editor = new E('#editorElem');
   //Js部分尽量采用ES6语法，webpack babel插件会转义兼容
   export default {
     //组件私有数据（必须是function，而且要return对象类型）
@@ -62,8 +63,7 @@
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      initEditor(){
-        let editor = new E('#editorElem');
+      initEditor() {
         // 自定义菜单配置
         editor.customConfig.menus = [
           'head',  // 标题
@@ -76,24 +76,131 @@
           'justify',  // 对齐方式
           'image',  // 插入图片
         ];
+        // 通过 url 参数配置 debug 模式。url 中带有 wangeditor_debug_mode=1 才会开启 debug 模式
+        editor.customConfig.debug = location.href.indexOf('wangeditor_debug_mode=1') > 0;
+
         editor.customConfig.showLinkImg = false;
         editor.customConfig.onchange = (html) => {
           this.editorContent = html
         };
         editor.customConfig.pasteFilterStyle = false;
-        editor.customConfig.uploadImgShowBase64 = true;
-        // 通过 url 参数配置 debug 模式。url 中带有 wangeditor_debug_mode=1 才会开启 debug 模式
-        editor.customConfig.debug = location.href.indexOf('wangeditor_debug_mode=1') > 0
+        editor.customConfig.uploadImgShowBase64 = false;
+        editor.customConfig.uploadImgServer = '/api/upload';
+        // 将图片大小限制为 50M
+        editor.customConfig.uploadImgMaxSize = 50 * 1024 * 1024;
+        editor.customConfig.uploadFileName = 'file';
+
+
+        editor.customConfig.uploadImgHooks = {
+          fail: function (xhr, editor, result) {
+            // 图片上传并返回结果，但图片插入错误时触发
+            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+            console.log("fail");
+          },
+          error: function (xhr, editor) {
+            // 图片上传出错时触发
+            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
+            console.log("error");
+          },
+          timeout: function (xhr, editor) {
+            // 图片上传超时时触发
+            // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
+            console.log("timeout");
+          },
+
+          // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+          // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
+          customInsert: function (insertImg, result, editor) {
+            // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+            // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+            console.log("customInsert");
+            // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+            let url = result.data.url;
+            insertImg(url);
+
+            // result 必须是一个 JSON 格式字符串！！！否则报错
+          }
+        };
 
         editor.create();
       },
+      insertImg : function(src) {
+        let img = document.createElement('img');
+        img.onload = function () {
+          let html = '<img src="' + src + '" style="max-width:100%;"/>';
+          editor.command(null, 'insertHtml', html);
+
+          E.log('已插入图片，地址 ' + src);
+          img = null;
+        };
+        img.onerror = function () {
+          E.error('使用返回的结果获取图片，发生错误。请确认以下结果是否正确：' + src);
+          img = null;
+        };
+        img.src = src;
+      },
       getContent: function () {
-        alert(this.editorContent);
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+          let url = '/api/help/save';
+          let params = {
+            body : this.editorContent,
+            token : memberJson.token
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      config(){
+        let member = localStorage.getItem('memberInfo');
+        if (this.isExist(member)) {
+          let memberJson = JSON.parse(member);
+          let url = '/api/help/query';
+          let params = {
+            token : memberJson.token
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                this.editorContent = data.body.data.body;
+                editor.txt.html(this.editorContent);
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
       this.initEditor();
+      this.config();
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

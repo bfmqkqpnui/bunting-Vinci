@@ -107,7 +107,7 @@
         if (this.isExist(member)) {
           let memberJson = JSON.parse(member);
 
-          let url = '/api/role/queryAllRoleOptions';
+          let url = '/api/role/queryAllRole';
           let params = {
             pageIndex: 1,
             pageSize: 50,
@@ -117,12 +117,12 @@
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
-                let list = data.body.data.result;
+                let list = data.body.data;
                 let arr = [];
                 for (let i in list) {
                   let json = {
                     value: list[i].id,
-                    label: list[i].optionName
+                    label: list[i].roleName
                   };
                   arr.push(json);
                 }
@@ -175,7 +175,7 @@
         }
       },
       defaultVilidata() {
-        var flag = false;
+        let flag = false;
         if (!this.isExist(this.defaultName)) {
           alert("名字不能为空");
           return flag;
@@ -200,7 +200,7 @@
         return flag;
       },
       accountVilidata() {
-        var flag = false;
+        let flag = false;
         if (!this.isExist(this.accountName)) {
           alert("账号不能为空");
           return flag;
@@ -221,7 +221,7 @@
         if (this.isExist(member) && this.defaultVilidata() && this.accountVilidata()) {
           let memberJson = JSON.parse(member);
 
-          let url = '/api/admin/updateAdminInfo';
+          let url = '/api/admin/insertCustomerServices';
           let params = {
             name: this.defaultName,
             nickName: this.defaultNickName,
@@ -232,11 +232,14 @@
             token: memberJson.token
           };
 
+          console.log("新增参数为:"+JSON.stringify(params));
+
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body);
                 alert(data.body.msg);
+                this.initValue();
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
@@ -291,6 +294,15 @@
             })
           }
         }
+      },
+      initValue() {
+        this.adminId = '';
+        this.defaultName = '';
+        this.defaultTel = '';
+        this.defaultNickName = '';
+        this.accountName = '';
+        this.accountPwd = '';
+        this.roleSel = '';
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
