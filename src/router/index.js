@@ -7,6 +7,7 @@ import index from '@/components/index/index'
 import loginComponent from '@/components/login/login'
 
 import userComponent from '@/components/main/user/user'
+import userDetailsComponent from '@/components/main/user/details/userDetails'
 import feedbackComponent from '@/components/main/user/feedback/feedback'
 
 import systemComponent from '@/components/main/system/system'
@@ -56,6 +57,14 @@ export default new Router({
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
           component: userComponent
+        },
+        {
+          path: 'user/userDetails',
+          name: 'userDetails',
+          meta: {
+            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+          },
+          component: userDetailsComponent
         },
         {
           path: 'feedback',
