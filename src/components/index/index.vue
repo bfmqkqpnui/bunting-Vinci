@@ -1,6 +1,6 @@
 <template>
   <div>
-    <headComponent></headComponent>
+    <headComponent ></headComponent>
     <leftComponent></leftComponent>
   </div>
 </template>
@@ -20,7 +20,7 @@
     methods: {},
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      document.body.style.backgroundColor = "";
+      document.body.style.backgroundColor = "#FFF";
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {headComponent, leftComponent}

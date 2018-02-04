@@ -152,7 +152,9 @@
   export default {
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
-      return {}
+      return {
+        userId : ''
+      }
     },
     //计算属性
     computed: {},
@@ -160,11 +162,19 @@
     methods: {
       turnBack() {
         this.$router.push({path: '/index/user'});
-      }
+      },
+      getParams() {
+        // 取到路由带过来的参数
+        let userId = this.$route.params.userId;
+        // 将数据放在当前组件的数据内
+        this.userId = userId;
+      },
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.$emit("config", 31);
+      this.getParams();
+      alert("用户详情:用户编号为"+this.userId);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

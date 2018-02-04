@@ -9,6 +9,7 @@ import loginComponent from '@/components/login/login'
 import userComponent from '@/components/main/user/user'
 import userDetailsComponent from '@/components/main/user/details/userDetails'
 import feedbackComponent from '@/components/main/user/feedback/feedback'
+import feedbackDetailComponent from '@/components/main/user/feedback/feedbackDetail'
 
 import systemComponent from '@/components/main/system/system'
 import roleManagerComponent from '@/components/main/system/roleManager/roleManager'
@@ -28,10 +29,19 @@ import deviceDataComponent from '@/components/main/device/deviceData/deviceData'
 import reportDataComponent from '@/components/main/report/reportData'
 
 import helpComponent from '@/components/main/help/help'
+
+import appSearchPageComponent from '@/components/appSearchPage'
+
 Vue.use(Router)
 
 export default new Router({
+  mode:'history',
   routes: [
+    {
+      path: '/appPage',
+      name: 'appPage',
+      component: appSearchPageComponent
+    },
     {
       path: '/',
       name: 'HelloWorld',
@@ -53,6 +63,7 @@ export default new Router({
       children: [
         {
           path: 'user',
+          name : 'user',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -68,20 +79,30 @@ export default new Router({
         },
         {
           path: 'feedback',
+          name:'feedback',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
           component: feedbackComponent
         },
         {
+          path: 'feedback/feedbackDetail',
+          name:'feedbackDetail',
+          meta: {
+            requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
+          },
+          component: feedbackDetailComponent
+        },
+        {
           path: 'system',
+          name:'system',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
           component: systemComponent
         },
         {
-          path: '/index/system/roleManager',
+          path: 'system/roleManager',
           name: 'roleManager',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
@@ -90,6 +111,7 @@ export default new Router({
         },
         {
           path: 'changePwd',
+          name: 'changePwd',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -97,6 +119,7 @@ export default new Router({
         },
         {
           path: 'managerInfo',
+          name: 'managerInfo',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -104,6 +127,7 @@ export default new Router({
         },
         {
           path: 'acountManager',
+          name: 'acountManager',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -119,6 +143,7 @@ export default new Router({
         },
         {
           path: 'authority',
+          name: 'authority',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -134,6 +159,7 @@ export default new Router({
         },
         {
           path: 'device',
+          name: 'device',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -141,6 +167,7 @@ export default new Router({
         },
         {
           path: 'device/deviceData',
+          name: 'deviceData',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -148,6 +175,7 @@ export default new Router({
         },
         {
           path: 'report',
+          name: 'report',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },
@@ -155,6 +183,7 @@ export default new Router({
         },
         {
           path: 'help',
+          name: 'help',
           meta: {
             requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
           },

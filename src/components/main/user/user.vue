@@ -42,7 +42,7 @@
             <td>{{item.bindingStatus | getDeviceStatus}}</td>
             <td v-text="item.bagDeviceCode"></td>
             <td>
-              <router-link :to="{name:'aaa',params:{userId:item.id}}">查看</router-link>
+              <router-link :to="{name:'userDetails',params:{userId:item.id}}">查看</router-link>
               <a href="javascript:void(0)">删除</a>
             </td>
           </tr>
@@ -124,7 +124,7 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config", 1);
+      this.$emit("config", 3);
       this.config();
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）

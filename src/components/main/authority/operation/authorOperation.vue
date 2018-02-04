@@ -5,7 +5,7 @@
         <el-breadcrumb separator-class="el-icon-d-arrow-right">
           <el-breadcrumb-item :to="{ path: '/index/user' }">达芬奇睡袋</el-breadcrumb-item>
           <el-breadcrumb-item :to="{ path: '/index/authority' }">权限类目</el-breadcrumb-item>
-          <el-breadcrumb-item v-if="menuName&&menuName.length">更新权限类目</el-breadcrumb-item>
+          <el-breadcrumb-item v-if="menuName && menuName !='' && selOption && selOption !=''">更新权限类目</el-breadcrumb-item>
           <el-breadcrumb-item v-else>新增权限类目</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
@@ -40,7 +40,8 @@
 
     <el-row class="row">
       <el-col :span="24" class="btnPostion">
-        <el-button type="primary" @click="update">确认</el-button>
+        <el-button type="primary" @click="update" v-if="menuName && menuName !='' && selOption && selOption !=''">更新</el-button>
+        <el-button type="primary" @click="add" v-else>新增</el-button>
         <el-button type="danger" plain @click="turnBack">返回</el-button>
       </el-col>
     </el-row>
@@ -88,17 +89,24 @@
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
+      getParams(){
+        this.menuName = this.$route.params.name;
+        this.selOption = this.$route.params.selValue;
+      },
       turnBack() {
         this.$router.push({path: '/index/authority'});
       },
       update() {
-
+        console.log("更新权限方法触发");
+      },
+      add(){
+        console.log("新增权限方法触发");
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.menuName = this.$route.params.name;
-      this.selOption = this.$route.params.selValue;
+      this.getParams();
+      this.$emit("config", 81);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

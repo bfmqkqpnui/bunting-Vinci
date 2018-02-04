@@ -11,7 +11,7 @@
 
     <el-row class="row">
       <el-col :span="18">
-        <el-button type="primary" plain>删除</el-button>
+        <el-button type="primary" plain @click="delSelList">删除</el-button>
       </el-col>
 
       <el-col :span="3">
@@ -62,8 +62,8 @@
             <td>张先生</td>
             <td>已回复</td>
             <td>
-              <router-link :to="{path:'/index/system/roleManager'}">查看</router-link>
-              <a href="javascript:void(0)">删除</a>
+              <router-link :to="{name:'feedbackDetail',params:{feedbackDetailId:1}}">查看</router-link>
+              <a href="javascript:void(0)" @click="delSelSimple(1)">删除</a>
             </td>
           </tr>
 
@@ -76,8 +76,8 @@
             <td>张先生</td>
             <td>已回复</td>
             <td>
-              <router-link :to="{path:'/index/system/roleManager'}">查看</router-link>
-              <a href="javascript:void(0)">删除</a>
+              <router-link :to="{name:'feedbackDetail',params:{feedbackDetailId:2}}">查看</router-link>
+              <a href="javascript:void(0)" @click="delSelSimple(2)">删除</a>
             </td>
           </tr>
 
@@ -112,10 +112,17 @@
     //计算属性
     computed: {},
     //函数集，自己封装，便于开发使用
-    methods: {},
+    methods: {
+      delSelList(){
+        console.log("批量删除方法触发:"+this.checkedList);
+      },
+      delSelSimple(data){
+        console.log("单个删除方法触发:"+data);
+      }
+    },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.$emit("config", 5);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

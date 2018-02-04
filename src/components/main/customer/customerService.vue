@@ -87,6 +87,7 @@
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
+                console.log(data.body);
                 this.tableList = data.body.data.result;
                 this.resultCount = data.body.data.resultCount;
                 this.currentPage = data.body.data.pageIndex;
@@ -156,7 +157,7 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config",5);
+      this.$emit("config",2);
       this.config(this.currentPage,this.display);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）

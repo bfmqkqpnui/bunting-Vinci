@@ -265,7 +265,7 @@
 
             let url = '/api/admin/queryById';
             let params = {
-              id: memberJson.id,
+              id: this.adminId,
               token: memberJson.token
             };
 
@@ -307,7 +307,7 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config", 51);
+      this.$emit("config", 21);
       this.getParams();
       this.queryAllRoles();
       if (this.adminId && this.adminId != '') {

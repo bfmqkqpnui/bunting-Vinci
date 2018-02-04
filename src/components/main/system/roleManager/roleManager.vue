@@ -205,6 +205,7 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
+      this.$emit("config", 11);
       this.queryAllRoles();
       this.getParams();
       if (this.roleId && !isNaN(this.roleId)) {

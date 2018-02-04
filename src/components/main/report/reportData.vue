@@ -27,19 +27,19 @@
           </el-row>
 
           <el-row class="main-row">
-            <el-col :span="9">
+            <el-col :span="24">
               <div class="block">
                 <el-date-picker
                   v-model="dateList"
                   type="daterange"
+                  @change="getDate"
+                  value-format="yyyy-MM-dd"
                   range-separator="--"
                   start-placeholder="开始日期"
                   end-placeholder="结束日期">
                 </el-date-picker>
+                <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
               </div>
-            </el-col>
-            <el-col :span="3">
-              <el-button type="primary" icon="el-icon-search">搜索</el-button>
             </el-col>
           </el-row>
 
@@ -172,21 +172,41 @@
     computed: {},
     //函数集，自己封装，便于开发使用
     methods: {
-      showMember(){
+      showMember() {
         this.tableShowList.memberFlag = true;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = false;
       },
-      showBaby(){
+      showBaby() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = true;
         this.tableShowList.deviceFlag = false;
       },
-      showDevice(){
+      showDevice() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = true;
       },
+      search() {
+        let type = '';
+        if (this.tableShowList.memberFlag) {
+          type = "会员";
+        }
+        if (this.tableShowList.babyFlag) {
+          type = "宝贝";
+        }
+        if (this.tableShowList.deviceFlag) {
+          type = "设备";
+        }
+        if (this.dateList.length > 0) {
+          console.log("数据记录搜索:类型[" + type + "],时间范围从[" + this.dateList[0] + "]到[" + this.dateList[1] + "]");
+        } else {
+          console.log("数据记录搜索:类型[" + type + "],请选择时间范围");
+        }
+      },
+      getDate(val) {
+        this.dateList = val;
+      }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
@@ -243,9 +263,10 @@
     padding: 1rem 1rem 0 1rem;
   }
 
-  .block{
-    margin-right:1rem;
+  .block {
+    margin-right: 1rem;
   }
+
   .block, table {
     margin-left: 1rem;
   }

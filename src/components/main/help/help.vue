@@ -115,8 +115,14 @@
             // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
             console.log("customInsert");
             // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
-            let url = result.data.url;
-            insertImg(url);
+            console.log(">>>>"+JSON.stringify(result));
+            if(result.result == 0){
+              let url = result.data.url;
+              insertImg(url);
+            }else{
+              alert(result.msg);
+            }
+
 
             // result 必须是一个 JSON 格式字符串！！！否则报错
           }

@@ -71,6 +71,7 @@
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
+                console.log(data.body);
                 this.systemList = data.body.data;
               } else {
                 if (data.body.result == 2) {
@@ -123,7 +124,7 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-      this.$emit("config", 6);
+      this.$emit("config", 1);
       this.config();
     }
     ,

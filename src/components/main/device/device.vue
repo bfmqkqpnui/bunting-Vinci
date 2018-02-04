@@ -68,7 +68,7 @@
             <td>已绑定</td>
             <td>55667788</td>
             <td>
-              <router-link :to="{path:'/index/device/deviceData'}">查看</router-link>
+              <router-link :to="{name:'deviceData'}">查看</router-link>
               <a href="javascript:void(0)">删除</a>
             </td>
           </tr>
@@ -133,7 +133,7 @@
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.$emit("config", 4);
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {pageComponent}

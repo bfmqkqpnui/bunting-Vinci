@@ -177,8 +177,10 @@ Vue.prototype.isPhone = function(phoneNum){
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
-    let token = localStorage.getItem('memberInfo');
-    if(token && '' != token && 'null' != token && null != token && typeof token != "undefined"){//调用接口校验token是否失效
+    let memberInfo = localStorage.getItem('memberInfo');
+    if(memberInfo && '' != memberInfo && 'null' != memberInfo && null != memberInfo && typeof memberInfo != "undefined"){//调用接口校验token是否失效
+      let memberJson = JSON.parse(memberInfo);
+      to.params.memberInfo = memberJson;
       next();
     }else{//跳转到登录界面
       router.push({path:'/login'});

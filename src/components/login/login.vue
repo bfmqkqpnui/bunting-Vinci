@@ -85,8 +85,9 @@
                 nickName : data.body.data.nickName,
                 userName : data.body.data.userName,
                 phone : data.body.data.phone,
-                role : data.body.data.role,
-                token : data.body.data.token
+                //role : data.body.data.role,
+                token : data.body.data.token,
+                roleOptionIds : data.body.data.role.roleOptionIds.split(","),
               };
               localStorage.setItem("memberInfo",JSON.stringify(member));
               this.$router.push({path : '/index/user'});
