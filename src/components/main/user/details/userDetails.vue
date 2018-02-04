@@ -10,26 +10,26 @@
       </el-col>
     </el-row>
 
-    <el-row class="row">
+    <el-row class="row" >
       <el-col :span="24">
         <el-col :span="12">
           <div class="pwdBody info">
             <div class="configPwd top">
-              <span class="title">帮助文档</span>
+              <span class="title">基本信息</span>
               <div>
-                <span>用户名：</span><span>张先生</span>
+                <span>用户名：</span><span v-text="defaultInfo.name"></span>
               </div>
 
               <div>
-                <span>昵称：</span><span>嗷嗷嗷</span>
+                <span>昵称：</span><span v-text="defaultInfo.nickname"></span>
               </div>
 
               <div>
-                <span>手机号：</span><span>15586952365</span>
+                <span>手机号：</span><span v-text="defaultInfo.userName"></span>
               </div>
 
               <div>
-                <span>身份：</span><span>父亲</span>
+                <span>身份：</span><span v-text="defaultInfo.identity"></span>
               </div>
 
               <div>
@@ -44,19 +44,19 @@
             <div class="configPwd top">
               <span class="title">设备信息</span>
               <div>
-                <span>设备ID：</span><span>22556688</span>
+                <span>设备ID：</span><span v-text="deviceInfo.deviceCode"></span>
               </div>
               <div>
-                <span>设备版本：</span><span>1.0</span>
+                <span>设备版本：</span><span v-text="deviceInfo.firmwareVersion"></span>
               </div>
               <div>
-                <span>设备状态：</span><span>已绑定</span>
+                <span>设备状态：</span><span>{{deviceInfo.status | getDeviceStatus}}</span>
               </div>
               <div>
-                <span>绑定宝贝：</span><span>candy</span>
+                <span>绑定宝贝：</span><span v-text="defaultInfo.babyName"></span>
               </div>
               <div>
-                <span>最近使用时间：</span><span>2018-01-08 20:23:00</span>
+                <span>最近使用时间：</span><span>{{deviceInfo.lastUpdateTime | formatDateTime}}</span>
               </div>
             </div>
           </div>
@@ -64,75 +64,38 @@
       </el-col>
     </el-row>
 
-    <el-row class="row">
+    <el-row class="row" v-for="(item,index) in babyInfoList" :key="index">
       <el-col :span="24">
         <div class="pwdBody babyInfo">
           <div class="configPwd top">
             <span class="title">我的宝贝</span>
             <div class="img">
-              <img src="/static/images/u116.png" alt="" width="64">
+              <img src="/static/images/u102.png" alt="item.baby.sex" width="64" v-if="item.baby.sex === '男'">
+              <img src="/static/images/u116.png" alt="item.baby.sex" width="64" v-if="item.baby.sex === '女'">
             </div>
             <div class="one">
               <div>
-                <span>昵称：</span><span>candy</span>
+                <span>昵称：</span><span v-text="item.baby.nickName"></span>
               </div>
               <div>
-                <span>性别：</span><span>女</span>
+                <span>性别：</span><span v-text="item.baby.sex"></span>
               </div>
               <div>
-                <span>出生日期：</span><span>2014-08-06</span>
+                <span>出生日期：</span><span v-text="item.baby.birthDate"></span>
               </div>
             </div>
 
             <div class="two">
               <div>
-                <span>身高：</span><span>55CM</span>
+                <span>身高：</span><span v-text="item.baby.stature"></span><span>CM</span>
               </div>
               <div>
-                <span>体重：</span><span>15KG</span>
+                <span>体重：</span><span v-text="item.baby.weight"></span><span>KG</span>
               </div>
               <div>
-                <span>绑定设备号：</span><span>22556688</span>
+                <span>绑定设备号：</span><span v-show="item.bindingStatus == 0">--</span><span v-show="item.bindingStatus == 1" v-text="item.bag.deviceCode"></span>
               </div>
-              <span class="title unbind">解除绑定</span>
-            </div>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-
-
-    <el-row class="row">
-      <el-col :span="24">
-        <div class="pwdBody babyInfo">
-          <div class="configPwd top">
-            <span class="title">我的宝贝</span>
-            <div class="img">
-              <img src="/static/images/u102.png" alt="" width="64">
-            </div>
-            <div class="one">
-              <div>
-                <span>昵称：</span><span>bob</span>
-              </div>
-              <div>
-                <span>性别：</span><span>男</span>
-              </div>
-              <div>
-                <span>出生日期：</span><span>2014-01-16</span>
-              </div>
-            </div>
-
-            <div class="two">
-              <div>
-                <span>身高：</span><span>60CM</span>
-              </div>
-              <div>
-                <span>体重：</span><span>16KG</span>
-              </div>
-              <div>
-                <span>绑定设备号：</span><span>--</span>
-              </div>
-              <!--<span class="title unbind">解除绑定</span>-->
+              <span class="title unbind" v-show="item.bindingStatus == 1" @click="unbind(item.babyId,item.bagId)">解除绑定</span>
             </div>
           </div>
         </div>
@@ -153,11 +116,15 @@
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
-        userId : ''
+        userId : '',
+        defaultInfo : {},
+        deviceInfo : {},
+        babyInfoList : []
       }
     },
     //计算属性
-    computed: {},
+    computed: {
+    },
     //函数集，自己封装，便于开发使用
     methods: {
       turnBack() {
@@ -165,19 +132,111 @@
       },
       getParams() {
         // 取到路由带过来的参数
-        let userId = this.$route.params.userId;
-        // 将数据放在当前组件的数据内
-        this.userId = userId;
+        this.userId  = this.$route.params.userId;
       },
+      config(){
+        let memberInfo = this.$route.params.memberInfo;
+        if(this.isExist(memberInfo)){
+          let url = '/api/user/queryById';
+          let params = {
+            id: this.userId,
+            token: memberInfo.token
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                this.deviceInfo = data.body.data.bag;
+                this.babyInfoList = data.body.data.babyBagList;
+                this.defaultInfo = data.body.data.user;
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      unbind(babyId,bagId){
+        if(this.isExist(babyId) && this.isExist(bagId)){
+          let memberInfo = this.$route.params.memberInfo;
+          if(this.isExist(memberInfo)){
+            let url = '/api/user/unbound';
+            let params = {
+              bagId: bagId,
+              babyId:babyId,
+              userId:this.userId,
+              token: memberInfo.token
+            };
+
+            this.$http.post(url, params).then(function (data) {
+              if (data.ok) {
+                if (data.body.result == 0) {
+                  console.log(data.body);
+                  this.config();
+                } else {
+                  if (data.body.result == 2) {
+                    localStorage.removeItem("memberInfo");
+                    this.$router.push("/login");
+                  } else {
+                    alert(data.body.msg);
+                  }
+                }
+              }
+            }, function (err) {
+              console.log("接口错误:", err);
+            })
+          }
+        }else{
+          console.log("解除设备绑定失败,设备号或者宝贝编号不存在"+babyId+"<<>>"+bagId);
+        }
+      }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
       this.$emit("config", 31);
       this.getParams();
-      alert("用户详情:用户编号为"+this.userId);
+      if(this.isExist(this.userId)){
+        this.config();
+      }
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {}
+    components: {},
+    filters:{
+      getDeviceStatus(status){
+        var strStatus = '未绑定';
+        if(status == 1){
+          strStatus = '已绑定';
+        }
+        return strStatus;
+      },
+      formatDateTime : function(inputTime){
+        if('' != inputTime && 'null' !=inputTime && null != inputTime && typeof inputTime != "undefined"){
+          let date = new Date(inputTime);
+          let y = date.getFullYear();
+          let m = date.getMonth() + 1;
+          m = m < 10 ? ('0' + m) : m;
+          let d = date.getDate();
+          d = d < 10 ? ('0' + d) : d;
+          let h = date.getHours();
+          h = h < 10 ? ('0' + h) : h;
+          let minute = date.getMinutes();
+          let second = date.getSeconds();
+          minute = minute < 10 ? ('0' + minute) : minute;
+          second = second < 10 ? ('0' + second) : second;
+          return y + '-' + m + '-' + d +' '+ h + ':' + minute + ':' + second;
+        }else{
+          return "";
+        }
+      }
+    }
   }
 </script>
 

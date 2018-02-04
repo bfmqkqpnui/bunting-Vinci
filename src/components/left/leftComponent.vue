@@ -234,13 +234,13 @@
               this.showMenu.systemFlag = true;
             }
             if (memberInfo.roleOptionIds[i] == 2) {
-              this.showMenu.deviceFlag = true;
+              this.showMenu.serviceFlag = true;
             }
             if (memberInfo.roleOptionIds[i] == 3) {
               this.showMenu.userFlag = true;
             }
             if (memberInfo.roleOptionIds[i] == 4) {
-              this.showMenu.serviceFlag = true;
+              this.showMenu.deviceFlag = true;
             }
             if (memberInfo.roleOptionIds[i] == 5) {
               this.showMenu.feedbackFlag = true;

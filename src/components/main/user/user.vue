@@ -22,14 +22,13 @@
       <el-col :span="23">
         <table border="1">
           <tr align="center">
-            <td width="5%">#</td>
+            <td width="10%">编号</td>
             <td width="15%">用户名</td>
-            <td width="15%">昵称</td>
-            <td width="15%">手机号</td>
+            <td width="20%">昵称</td>
             <td width="10%">身份</td>
             <td width="10%">设备状态</td>
             <td width="15%">设备号</td>
-            <td width="15%">操作</td>
+            <td width="20%">操作</td>
           </tr>
 
           <tbody>
@@ -37,26 +36,14 @@
             <td v-text="index+1"></td>
             <td v-text="item.userName"></td>
             <td v-text="item.nickname"></td>
-            <td>18589568526</td>
             <td v-text="item.identity"></td>
             <td>{{item.bindingStatus | getDeviceStatus}}</td>
             <td v-text="item.bagDeviceCode"></td>
             <td>
               <router-link :to="{name:'userDetails',params:{userId:item.id}}">查看</router-link>
-              <a href="javascript:void(0)">删除</a>
+              <a href="javascript:void(0)" @click="del">删除</a>
             </td>
           </tr>
-
-          <!--<tr align="center">
-            <td>2</td>
-            <td>李女士</td>
-            <td>啦啦啦</td>
-            <td>15525698569</td>
-            <td>母亲</td>
-            <td>未绑定</td>
-            <td>&#45;&#45;</td>
-            <td><a href="javascript:void(0)">查看</a> <a href="javascript:void(0)">删除</a></td>
-          </tr>-->
           </tbody>
         </table>
       </el-col>
@@ -120,6 +107,9 @@
           })
 
         }
+      },
+      del(){
+        console.log("删除方法被触发");
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
