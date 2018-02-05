@@ -11,10 +11,12 @@
 
     <el-row class="row">
       <el-col :span="5" :offset="17">
-        <el-input v-model="input" placeholder="用户名/手机号"></el-input>
+        <el-input v-model="input" placeholder="用户名/手机号" class="input-with-button">
+        </el-input>
       </el-col>
       <el-col :span="1">
-        <el-button type="primary" icon="el-icon-search">搜索</el-button>
+          <el-button type="primary" icon="el-icon-search">搜索</el-button>
+        </el-input>
       </el-col>
     </el-row>
 
@@ -133,6 +135,11 @@
   }
 </script>
 
-<style>
-
+<style scoped>
+  .input-with-select .el-input-group__prepend {
+    background-color: #409EFF!important;
+  }
+  .input-with-select .el-input-group__prepend button{
+    background-color: #409EFF!important;
+  }
 </style>

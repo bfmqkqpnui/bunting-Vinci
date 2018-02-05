@@ -14,7 +14,7 @@
         <el-button type="primary" plain @click="delSelList">删除</el-button>
       </el-col>
 
-      <el-col :span="3">
+      <el-col :span="6">
         <el-select v-model="selStatus" clearable placeholder="请选择">
           <el-option
             v-for="item in replyStatus"
@@ -23,9 +23,6 @@
             :value="item.value">
           </el-option>
         </el-select>
-      </el-col>
-
-      <el-col :span="3">
         <el-button type="primary" icon="el-icon-search">搜索</el-button>
       </el-col>
     </el-row>
