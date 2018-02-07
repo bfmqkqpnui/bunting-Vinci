@@ -70,9 +70,10 @@
             <td v-text="item.user.identity" v-if="item.user"></td>
             <td v-else></td>
             <td>{{item.bindingStatus | getDeviceStatus}}</td>
-            <td v-text="item.bag.deviceCode"></td>
+            <td v-text="item.bag.deviceCode" v-if="item.bag"></td>
+            <td v-else></td>
             <td>
-              <router-link :to="{name:'deviceData'}">查看</router-link>
+              <router-link :to="{name:'deviceData',params:{bagId:item.bagId}}">查看</router-link>
               <a href="javascript:void(0)" @click="delById(item.bagId)">删除</a>
             </td>
           </tr>
@@ -165,7 +166,6 @@
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body);
-                alert(data.body.msg);
                 this.config();
               } else {
                 if (data.body.result == 2) {
@@ -186,6 +186,8 @@
         if(this.isExist(memberInfo)) {
           let url = '/api/bag/queryAll';
           let params = {
+            deviceCode : this.deviceNum,
+            bindingStatus : this.selStatus,
             pageIndex: this.currentPage,
             pageSize : this.display,
             token: memberInfo.token
@@ -210,6 +212,9 @@
                   this.$router.push("/login");
                 } else {
                   alert(data.body.msg);
+                  if(data.body.result == 3){
+                    this.init();
+                  }
                 }
               }
             }
@@ -233,10 +238,27 @@
         }
       },
       search(){
-        let memberInfo = this.$route.params.memberInfo;
-        if(this.isExist(memberInfo)) {
-          console.log("搜索触发条件:设备号["+this.deviceNum+"],设备状态["+this.selStatus+"],查询当前页码数["+this.currentPage+"],查询每页展示的记录条数["+this.display+"]");
-        }
+        console.log("搜索触发条件:设备号["+this.deviceNum+"],设备状态["+this.selStatus+"],查询当前页码数["+this.currentPage+"],查询每页展示的记录条数["+this.display+"]");
+        this.config();
+      },
+      init(){//初始化数据
+        this.deviceNum = '';
+        this.deviceStatus = [
+          {
+            label: '未绑定',
+            value: 0
+          },
+          {
+            label: '已绑定',
+            value: 1
+          }
+        ];
+        this.selStatus = '';
+        this.checkedList = [];
+        this.resultCount = 0;     // 记录总条数
+        this.display = 10;   // 每页显示条数
+        this.currentPage = 1,   // 当前的页数
+        this.tableList = [];
       }
     },
     //生命周期钩子：组件实例渲染完成时调用

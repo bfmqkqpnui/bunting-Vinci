@@ -57,7 +57,7 @@
                 </tr>
 
                 <tbody>
-                <tr align="center">
+                <tr align="center" v-for="(item,index) in memberDataList">
                   <td>1</td>
                   <td>张先生</td>
                   <td>15589658956</td>
@@ -148,10 +148,17 @@
         </div>
       </el-col>
     </el-row>
+    <el-row class="row">
+      <el-col :span="24">
+        <pageComponent :resultCount="resultCount" :currentPage='currentPage' @handleCurrentChange="handleCurrentChange"
+                       @handleSizeChange="handleSizeChange"></pageComponent>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+  import pageComponent from '@/components/pagination/paginationFull'
   //Js部分尽量采用ES6语法，webpack babel插件会转义兼容
   export default {
     //组件私有数据（必须是function，而且要return对象类型）
@@ -165,7 +172,10 @@
           memberFlag: true,
           babyFlag: false,
           deviceFlag: false
-        }
+        },
+        resultCount: 0,     // 记录总条数
+        display: 10,   // 每页显示条数
+        currentPage: 1,   // 当前的页数
       }
     },
     //计算属性
@@ -176,44 +186,109 @@
         this.tableShowList.memberFlag = true;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = false;
+        this.config();
       },
       showBaby() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = true;
         this.tableShowList.deviceFlag = false;
+        this.config();
       },
       showDevice() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = true;
+        this.config();
       },
       search() {
-        let type = '';
-        if (this.tableShowList.memberFlag) {
-          type = "会员";
-        }
-        if (this.tableShowList.babyFlag) {
-          type = "宝贝";
-        }
-        if (this.tableShowList.deviceFlag) {
-          type = "设备";
-        }
-        if (this.dateList.length > 0) {
-          console.log("数据记录搜索:类型[" + type + "],时间范围从[" + this.dateList[0] + "]到[" + this.dateList[1] + "]");
-        } else {
-          console.log("数据记录搜索:类型[" + type + "],请选择时间范围");
-        }
+        this.config();
       },
       getDate(val) {
         this.dateList = val;
+      },
+      handleCurrentChange(currentPage) {
+        console.log(`当前页:` + currentPage);
+        if (currentPage && Number(currentPage)) {
+          this.currentPage = currentPage;
+          this.config();
+        }
+      },
+      handleSizeChange(pageSize) {
+        console.log(`当前记录条数: ` + pageSize);
+        if (pageSize && Number(pageSize)) {
+          this.display = pageSize;
+          this.config();
+        }
+      },
+      config(){
+        let memberInfo = this.$route.params.memberInfo;
+        if(this.isExist(memberInfo)) {
+          let url = '/api/bag/queryTPDList';
+          let params = {
+            pageIndex : this.currentPage,
+            pageSize : this.display,
+            token : memberInfo.token,
+            startTime : this.dateList[0],
+            endTime : this.dateList[1]
+          };
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                this.resultCount = data.body.data.resultCount;
+                this.currentPage = data.body.data.pageIndex;
+                if(this.tableShowList.memberFlag){
+                  this.memberDataList = data.body.data.result;
+                }else if(this.tableShowList.deviceFlag){
+                  this.deviceDataList = data.body.data.result;
+                }else if(this.tableShowList.babyFlag){
+                  this.babyDataList = data.body.data.result;
+                }else{
+                  this.memberDataList = data.body.data.result;
+                }
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
-
+      this.$emit("config", 7);
+      this.config();
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {}
+    components: {pageComponent},
+    filters: {
+      formatDateTime: function (inputTime) {
+        if ('' != inputTime && 'null' != inputTime && null != inputTime && typeof inputTime != "undefined") {
+          let date = new Date(inputTime);
+          let y = date.getFullYear();
+          let m = date.getMonth() + 1;
+          m = m < 10 ? ('0' + m) : m;
+          let d = date.getDate();
+          d = d < 10 ? ('0' + d) : d;
+          let h = date.getHours();
+          h = h < 10 ? ('0' + h) : h;
+          let minute = date.getMinutes();
+          let second = date.getSeconds();
+          minute = minute < 10 ? ('0' + minute) : minute;
+          second = second < 10 ? ('0' + second) : second;
+          return y + '-' + m + '-' + d + ' ' + h + ':' + minute + ':' + second;
+        } else {
+          return "";
+        }
+      },
+    }
   }
 </script>
 

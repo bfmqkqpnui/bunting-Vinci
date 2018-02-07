@@ -10,13 +10,13 @@
       </el-col>
     </el-row>
 
-    <el-row class="row">
+    <el-row class="row" v-if="feedbackDetailId && feedbackDetailId != ''">
       <el-col :span="24">
         <div class="pwdBody">
           <div class="configPwd">
             <span class="title">用户反馈</span>
-            <p>
-              从用户的地域分布和消费能力等因素，来分析信封式睡袋行业的市场分布情况，并对消费规模较大的重点区域市场的消费情况进行分析。从用户的地域分布和消费能力等因素，来分析信封式睡袋行业的市场分布情况，并对消费规模较大的重点区域市场的消费情况进行分析从用户的地域分布和消费能力等因素，来分析信封式睡袋行业的市场分布情况，并对消费规模较大的重点区域市场的消费情况进行分析。</p>
+            <p v-text="askBody">
+            </p>
           </div>
 
           <div class="configPwd">
@@ -34,8 +34,7 @@
 
     <el-row class="row">
       <el-col :span="24" class="btnPostion">
-        <el-button type="primary" @click="update" v-if="feedbackDetailId && feedbackDetailId != ''">更新</el-button>
-        <el-button type="primary" @click="add" v-else>新增</el-button>
+        <el-button type="primary" @click="update" v-if="feedbackDetailId && feedbackDetailId != ''">确认回复</el-button>
         <el-button type="danger" plain @click="turnBack">返回</el-button>
       </el-col>
     </el-row>
@@ -49,21 +48,9 @@
     //组件私有数据（必须是function，而且要return对象类型）
     data() {
       return {
-        selStatus: '',
-        replyStatus: [
-          {
-            label: '待回复',
-            value: '0'
-          },
-          {
-            label: '已回复',
-            value: '1'
-          }
-        ],
-        systemList: [],
-        checkedList: [],
         textarea: '',
-        feedbackDetailId : ''
+        feedbackDetailId : '',
+        askBody : ''
       }
     },
     //计算属性
@@ -84,12 +71,79 @@
       },
       update(){
         console.log("更新方法被唤起");
-      }
+        let memberInfo = this.$route.params.memberInfo;
+        console.log(JSON.stringify(memberInfo));
+        if (this.isExist(memberInfo)) {
+          let url = '/api/feedback/replyFeedback';
+          let params = {
+            adminId : memberInfo.id,
+            replyBody : this.textarea,
+            token : memberInfo.token,
+            id : this.feedbackDetailId
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                alert(data.body.msg);
+                this.config();
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                  if (data.body.result == 3) {
+                    this.init();
+                  }
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      config(){
+        let memberInfo = this.$route.params.memberInfo;
+        if (this.isExist(memberInfo)) {
+          let url = '/api/feedback/queryById';
+          let params = {
+            token : memberInfo.token,
+            id : this.feedbackDetailId
+          };
+
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                this.askBody = data.body.data.askBody;
+                this.textarea = data.body.data.replyBody;
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                  if (data.body.result == 3) {
+                    this.init();
+                  }
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
       this.$emit("config", 51);
       this.getParams();
+      if(this.feedbackDetailId != ''){
+        this.config();
+      }
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {}

@@ -15,8 +15,7 @@
         </el-input>
       </el-col>
       <el-col :span="1">
-          <el-button type="primary" icon="el-icon-search">搜索</el-button>
-        </el-input>
+        <el-button type="primary" icon="el-icon-search">搜索</el-button>
       </el-col>
     </el-row>
 
@@ -43,7 +42,7 @@
             <td v-text="item.bagDeviceCode"></td>
             <td>
               <router-link :to="{name:'userDetails',params:{userId:item.id}}">查看</router-link>
-              <a href="javascript:void(0)" @click="del">删除</a>
+              <!--<a href="javascript:void(0)" @click="del">删除</a>-->
             </td>
           </tr>
           </tbody>
@@ -53,7 +52,8 @@
 
     <el-row class="row">
       <el-col :span="24">
-        <pageComponent :resultCount="resultCount" :currentPage='currentPage'></pageComponent>
+        <pageComponent :resultCount="resultCount" :currentPage='currentPage' @handleCurrentChange="handleCurrentChange"
+                       @handleSizeChange="handleSizeChange"></pageComponent>
       </el-col>
     </el-row>
   </div>
@@ -70,7 +70,7 @@
         resultCount: 0,     // 记录总条数
         display: 10,   // 每页显示条数
         currentPage: 1,   // 当前的页数
-        tableList : []
+        tableList: []
       }
     },
     //计算属性
@@ -101,18 +101,41 @@
                   this.$router.push("/login");
                 } else {
                   alert(data.body.msg);
+                  if(data.body.result == 3){
+                    this.init();
+                  }
                 }
               }
             }
           }, function (err) {
             console.log("接口错误:", err);
           })
-
         }
       },
-      del(){
+      del() {
         console.log("删除方法被触发");
-      }
+      },
+      init(){
+        this.input = '';
+        this.resultCount = 0;     // 记录总条数
+        this.display = 10;   // 每页显示条数
+        this.currentPage = 1;   // 当前的页数
+        this.tableList = [];
+      },
+      handleCurrentChange(currentPage) {
+        console.log(`当前页:` + currentPage);
+        if (currentPage && Number(currentPage)) {
+          this.currentPage = currentPage;
+          this.config();
+        }
+      },
+      handleSizeChange(pageSize) {
+        console.log(`当前记录条数: ` + pageSize);
+        if (pageSize && Number(pageSize)) {
+          this.display = pageSize;
+          this.config();
+        }
+      },
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
@@ -121,11 +144,11 @@
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
     components: {pageComponent},
-    filters:{
-      getDeviceStatus(status){
+    filters: {
+      getDeviceStatus(status) {
         let strStatus = '未绑定';
-        if(!isNaN(status)){
-          if(status == 1){
+        if (!isNaN(status)) {
+          if (status == 1) {
             strStatus = '已绑定';
           }
         }
@@ -137,9 +160,10 @@
 
 <style scoped>
   .input-with-select .el-input-group__prepend {
-    background-color: #409EFF!important;
+    background-color: #409EFF !important;
   }
-  .input-with-select .el-input-group__prepend button{
-    background-color: #409EFF!important;
+
+  .input-with-select .el-input-group__prepend button {
+    background-color: #409EFF !important;
   }
 </style>

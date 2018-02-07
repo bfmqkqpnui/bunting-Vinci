@@ -46,101 +46,81 @@
 
           <el-row class="main-row">
             <el-col :span="23">
-              <!-- 会员 -->
-              <table border="1" v-show="tableShowList.memberFlag">
+              <!-- 温度 -->
+              <table border="1" v-if="tableShowList.memberFlag">
                 <tr align="center">
                   <td width="10%">编号</td>
-                  <td width="10%">用户名</td>
-                  <td width="10%">联系方式</td>
-                  <td width="40%">最近使用时间</td>
-                  <td width="15%">设备号</td>
-                  <td width="15%">绑定宝贝</td>
+                  <td width="30%">时间</td>
+                  <td width="60%">温度</td>
                 </tr>
 
                 <tbody>
-                <tr align="center">
-                  <td>1</td>
-                  <td>张先生</td>
-                  <td>15589658956</td>
-                  <td>2018-01-12 15:25:26</td>
-                  <td>1256</td>
-                  <td>candy</td>
-                </tr>
-
-                <tr align="center">
-                  <td>2</td>
-                  <td>赵先生</td>
-                  <td>15589658956</td>
-                  <td>2018-01-12 15:25:26</td>
-                  <td>1256</td>
-                  <td>candy</td>
-                </tr>
-
-                <tr align="center">
-                  <td>3</td>
-                  <td>李女士</td>
-                  <td>15589658956</td>
-                  <td>2018-01-12 15:25:26</td>
-                  <td>1256</td>
-                  <td>candy</td>
+                <tr align="center" v-for="(item,index) in memberDataList">
+                  <td v-text="index+1"></td>
+                  <td>{{item.date | formatDateTime}}</td>
+                  <td>{{item.temperature | formatTemperature}}</td>
                 </tr>
                 </tbody>
               </table>
 
-              <!-- 宝贝 -->
-              <table border="1" v-show="tableShowList.babyFlag">
+              <!-- 姿势 -->
+              <table border="1" v-if="tableShowList.babyFlag">
                 <tr align="center">
                   <td width="10%">编号</td>
-                  <td width="10%">宝贝</td>
-                  <td width="20%">家长</td>
-                  <td width="20%">绑定设备号</td>
-                  <td width="20%">喜爱温度</td>
-                  <td width="20%">喜爱姿势</td>
+                  <td width="30%">时间</td>
+                  <td width="60%">姿势</td>
                 </tr>
 
                 <tbody>
-                <tr align="center">
-                  <td>1</td>
-                  <td>candy</td>
-                  <td>张先生</td>
-                  <td>1568687</td>
-                  <td>35℃</td>
-                  <td>姿势一</td>
+                <tr align="center" v-for="(item,index) in babyDataList">
+                  <td v-text="index+1"></td>
+                  <td>{{item.date | formatDateTime}}</td>
+                  <td v-text="item.posture"></td>
                 </tr>
                 </tbody>
               </table>
 
-              <!-- 设备 -->
-              <table border="1" v-show="tableShowList.deviceFlag">
+              <!-- 9轴 -->
+              <table border="1" v-if="tableShowList.deviceFlag">
                 <tr align="center">
-                  <td width="10%">编号</td>
-                  <td width="15%">设备号</td>
-                  <td width="35%">最近使用时间</td>
-                  <td width="10%">电量</td>
-                  <td width="10%">状态</td>
-                  <td width="10%">设备版本</td>
-                  <td width="10%">绑定用户</td>
+                  <td width="5%">编号</td>
+                  <td width="20%">时间</td>
+                  <td width="5%">数据1</td>
+                  <td width="5%">数据2</td>
+                  <td width="5%">数据3</td>
+                  <td width="5%">数据4</td>
+                  <td width="5%">数据5</td>
+                  <td width="5%">数据6</td>
+                  <td width="5%">数据7</td>
+                  <td width="5%">数据8</td>
+                  <td width="5%">数据9</td>
+                  <td width="5%">数据10</td>
+                  <td width="5%">数据11</td>
+                  <td width="5%">数据12</td>
+                  <td width="5%">数据13</td>
+                  <td width="5%">数据14</td>
+                  <td width="5%">数据15</td>
                 </tr>
 
                 <tbody>
-                <tr align="center">
-                  <td>1</td>
-                  <td>12423546</td>
-                  <td>2017-08-23 12:23:34</td>
-                  <td>56%</td>
-                  <td>正常</td>
-                  <td>1.0</td>
-                  <td>张先生</td>
-                </tr>
-
-                <tr align="center">
-                  <td>2</td>
-                  <td>32473985</td>
-                  <td>2017-08-23 12:23:34</td>
-                  <td>89%</td>
-                  <td>正常</td>
-                  <td>2.0</td>
-                  <td>李女士</td>
+                <tr align="center" v-for="(item,index) in deviceDataList">
+                  <td v-text="index+1"></td>
+                  <td>{{item.date | formatDateTime}}</td>
+                  <td v-text="item.d1"></td>
+                  <td v-text="item.d2"></td>
+                  <td v-text="item.d3"></td>
+                  <td v-text="item.d4"></td>
+                  <td v-text="item.d5"></td>
+                  <td v-text="item.d6"></td>
+                  <td v-text="item.d7"></td>
+                  <td v-text="item.d8"></td>
+                  <td v-text="item.d9"></td>
+                  <td v-text="item.d10"></td>
+                  <td v-text="item.d11"></td>
+                  <td v-text="item.d12"></td>
+                  <td v-text="item.d13"></td>
+                  <td v-text="item.d14"></td>
+                  <td v-text="item.d15"></td>
                 </tr>
                 </tbody>
               </table>
@@ -149,10 +129,18 @@
         </div>
       </el-col>
     </el-row>
+
+    <el-row class="row">
+      <el-col :span="24">
+        <pageComponent :resultCount="resultCount" :currentPage='currentPage' @handleCurrentChange="handleCurrentChange"
+                       @handleSizeChange="handleSizeChange"></pageComponent>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+  import pageComponent from '@/components/pagination/paginationFull'
   //Js部分尽量采用ES6语法，webpack babel插件会转义兼容
   export default {
     //组件私有数据（必须是function，而且要return对象类型）
@@ -166,7 +154,11 @@
           memberFlag: true,
           babyFlag: false,
           deviceFlag: false
-        }
+        },
+        resultCount: 0,     // 记录总条数
+        display: 10,   // 每页显示条数
+        currentPage: 1,   // 当前的页数
+        bagId : ''      //睡袋编号
       }
     },
     //计算属性
@@ -177,44 +169,124 @@
         this.tableShowList.memberFlag = true;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = false;
+        this.config();
       },
       showBaby() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = true;
         this.tableShowList.deviceFlag = false;
+        this.config();
       },
       showDevice() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = true;
+        this.config();
       },
-      search(){
-        let type = '';
-        if(this.tableShowList.memberFlag){
-          type = "温度";
-        }
-        if(this.tableShowList.babyFlag){
-          type = "姿势";
-        }
-        if(this.tableShowList.deviceFlag){
-          type = "9轴";
-        }
-        if(this.dateList.length > 0){
-          console.log("数据记录搜索:类型["+type+"],时间范围从["+this.dateList[0]+"]到["+this.dateList[1]+"]");
-        }else{
-          console.log("数据记录搜索:类型["+type+"],请选择时间范围");
-        }
+      search() {
+        this.config();
       },
-      getDate(val){
+      getDate(val) {
         this.dateList = val;
-      }
+      },
+      handleCurrentChange(currentPage) {
+        console.log(`当前页:` + currentPage);
+        if (currentPage && Number(currentPage)) {
+          this.currentPage = currentPage;
+          this.config();
+        }
+      },
+      handleSizeChange(pageSize) {
+        console.log(`当前记录条数: ` + pageSize);
+        if (pageSize && Number(pageSize)) {
+          this.display = pageSize;
+          this.config();
+        }
+      },
+      config(){
+        let memberInfo = this.$route.params.memberInfo;
+        if(this.isExist(memberInfo)) {
+          let url = '/api/bag/queryBagTPDList';
+          let params = {
+            id : this.bagId,
+            pageIndex : this.currentPage,
+            pageSize : this.display,
+            token : memberInfo.token,
+            startTime : this.dateList[0],
+            endTime : this.dateList[1]
+          };
+          this.$http.post(url, params).then(function (data) {
+            if (data.ok) {
+              if (data.body.result == 0) {
+                console.log(data.body);
+                this.resultCount = data.body.data.resultCount;
+                this.currentPage = data.body.data.pageIndex;
+                if(this.tableShowList.memberFlag){
+                  this.memberDataList = data.body.data.result;
+                }else if(this.tableShowList.deviceFlag){
+                  this.deviceDataList = data.body.data.result;
+                }else if(this.tableShowList.babyFlag){
+                  this.babyDataList = data.body.data.result;
+                }else{
+                  this.memberDataList = data.body.data.result;
+                }
+              } else {
+                if (data.body.result == 2) {
+                  localStorage.removeItem("memberInfo");
+                  this.$router.push("/login");
+                } else {
+                  alert(data.body.msg);
+                }
+              }
+            }
+          }, function (err) {
+            console.log("接口错误:", err);
+          })
+        }
+      },
+      getParams() {
+        // 取到路由带过来的参数
+        let bagId = this.$route.params.bagId;
+        // 将数据放在当前组件的数据内
+        this.bagId = bagId;
+      },
     },
     //生命周期钩子：组件实例渲染完成时调用
     mounted() {
+      this.getParams();
       this.$emit("config", 41);
+      this.config();
     },
     //要用到哪些子组件（如果组件已是最小粒度，那么可省略该属性）
-    components: {}
+    components: {pageComponent},
+    filters:{
+      formatDateTime : function(inputTime){
+        if('' != inputTime && 'null' !=inputTime && null != inputTime && typeof inputTime != "undefined"){
+          let date = new Date(inputTime);
+          let y = date.getFullYear();
+          let m = date.getMonth() + 1;
+          m = m < 10 ? ('0' + m) : m;
+          let d = date.getDate();
+          d = d < 10 ? ('0' + d) : d;
+          let h = date.getHours();
+          h = h < 10 ? ('0' + h) : h;
+          let minute = date.getMinutes();
+          let second = date.getSeconds();
+          minute = minute < 10 ? ('0' + minute) : minute;
+          second = second < 10 ? ('0' + second) : second;
+          return y + '-' + m + '-' + d +' '+ h + ':' + minute + ':' + second;
+        }else{
+          return "";
+        }
+      },
+      formatTemperature(val){
+        if(!isNaN(val)){
+          return val + "℃";
+        }else{
+          return "";
+        }
+      }
+    }
   }
 </script>
 
@@ -264,9 +336,10 @@
     padding: 1rem 1rem 0 1rem;
   }
 
-  .block{
+  .block {
     margin-right: 1rem;
   }
+
   .block, table {
     margin-left: 1rem;
   }
