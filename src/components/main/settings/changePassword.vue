@@ -60,19 +60,19 @@
     methods: {
       update() {
         if (!this.isExist(this.configPwd)) {
-          alert("原始密码不能为空");
+          this.$message.error("原始密码不能为空");
           return;
         }
         if (!this.isExist(this.newPwd)) {
-          alert("新密码不能为空");
+          this.$message.error("新密码不能为空");
           return;
         }
         if (this.newPwd.length < 4) {
-          alert("新密码长度至少4位");
+          this.$message.error("新密码长度至少4位");
           return;
         }
         if (this.newPwd != this.repeatPwd) {
-          alert("新密码和重复密码不一致");
+          this.$message.error("新密码和重复密码不一致");
           return;
         }
 
@@ -96,13 +96,13 @@
             if(data.ok){
               if(data.body.result == 0){
                 console.log(data.body.data);
-                alert("密码修改成功");
+                this.$message.success("密码修改成功");
               }else{
                 if(data.body.result == 2){
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 }else{
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }

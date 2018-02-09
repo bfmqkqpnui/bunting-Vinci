@@ -120,7 +120,7 @@
               let url = result.data.url;
               insertImg(url);
             }else{
-              alert(result.msg);
+              this.$message.error(result.msg);
             }
 
 
@@ -164,7 +164,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -193,7 +193,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }

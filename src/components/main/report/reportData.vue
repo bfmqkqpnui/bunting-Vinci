@@ -223,7 +223,7 @@
       config(){
         let memberInfo = this.$route.params.memberInfo;
         if(this.isExist(memberInfo)) {
-          let url = '/api/bag/queryTPDList';
+          let url = '/api/analysis/queryUserAnalysis';
           let params = {
             pageIndex : this.currentPage,
             pageSize : this.display,
@@ -232,6 +232,8 @@
             endTime : this.dateList[1]
           };
           this.$http.post(url, params).then(function (data) {
+            this.$message.info(data);
+            debugger;
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body);
@@ -251,7 +253,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }

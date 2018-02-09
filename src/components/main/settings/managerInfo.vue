@@ -59,19 +59,19 @@
     methods: {
       update() {
         if (!this.isExist(this.customName)) {
-          alert("姓名不能为空");
+          this.$message.error("姓名不能为空");
           return;
         }
         if (!this.isExist(this.customNickName)) {
-          alert("昵称不能为空");
+          this.$message.error("昵称不能为空");
           return;
         }
         if (!this.isExist(this.customTel)) {
-          alert("手机号不能为空");
+          this.$message.error("手机号不能为空");
           return;
         }
         if (!this.isPhone(this.customTel)) {
-          alert("手机号不规范");
+          this.$message.error("手机号不规范");
           return;
         }
 
@@ -91,13 +91,13 @@
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body.msg);
-                alert("个人信息修改成功");
+                this.$message.success("个人信息修改成功");
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -131,7 +131,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }

@@ -85,14 +85,14 @@
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
-                alert(data.body.msg);
+                this.$message.success(data.body.msg);
                 this.config();
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                   if (data.body.result == 3) {
                     this.init();
                   }
@@ -124,7 +124,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                   if (data.body.result == 3) {
                     this.init();
                   }

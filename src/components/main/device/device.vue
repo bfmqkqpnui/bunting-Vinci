@@ -11,7 +11,14 @@
 
     <el-row class="row">
       <el-col :span="2">
-        <el-button type="primary" plain>导入设备号</el-button>
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :limit="1"
+          :show-file-list="false"
+          :before-upload="beforeAvatarUpload">
+          <el-button size="small" type="primary">导入设备号</el-button>
+        </el-upload>
       </el-col>
 
       <el-col :span="2">
@@ -134,14 +141,14 @@
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body);
-                alert(data.body.msg);
+                this.$message.success(data.body.msg);
                 this.config();
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -172,7 +179,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -211,7 +218,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                   if(data.body.result == 3){
                     this.init();
                   }
@@ -259,6 +266,20 @@
         this.display = 10;   // 每页显示条数
         this.currentPage = 1,   // 当前的页数
         this.tableList = [];
+      },
+      beforeAvatarUpload(file) {
+        let isExcel = false;
+        if(file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+          isExcel = true;
+        }
+        const isLt2M = file.size / 1024 / 1024 > 2;
+        console.log(file);
+        console.log("文件类型:"+file.type + "<<<<" + isExcel);
+        console.log("文件大小:"+file.size);
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isExcel && isLt2M;
       }
     },
     //生命周期钩子：组件实例渲染完成时调用

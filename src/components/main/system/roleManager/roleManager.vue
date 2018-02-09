@@ -82,7 +82,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -117,7 +117,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -157,7 +157,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -181,13 +181,13 @@
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body);
-                alert(data.body.msg);
+                this.$message.success(data.body.msg);
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }

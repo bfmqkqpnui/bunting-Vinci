@@ -141,7 +141,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                   if (data.body.result == 3) {
                     this.init();
                   }

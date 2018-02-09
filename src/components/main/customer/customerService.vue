@@ -96,7 +96,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -123,7 +123,6 @@
         this.$router.push({path:'/index/acountManager/acountOperation'})
       },
       setAccountStatus(status,adminId){
-        alert(">>>"+status+"["+adminId+"]");
         let member = localStorage.getItem('memberInfo');
         if(!isNaN(status) && this.isExist(member) && this.isExist(adminId)){
           let memberJson = JSON.parse(member);
@@ -138,14 +137,14 @@
           this.$http.post(url, params).then(function (data) {
             if (data.ok) {
               if (data.body.result == 0) {
-                alert(data.body.msg);
+                this.$message.success(data.body.msg);
                 this.config(this.currentPage,this.display);
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }

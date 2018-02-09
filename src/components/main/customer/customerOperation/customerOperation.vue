@@ -132,7 +132,7 @@
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -159,13 +159,13 @@
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body);
-                alert(data.body.msg);
+                this.$message.success(data.body.msg);
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -177,23 +177,23 @@
       defaultVilidata() {
         let flag = false;
         if (!this.isExist(this.defaultName)) {
-          alert("名字不能为空");
+          this.$message.error("名字不能为空");
           return flag;
         }
         if (!this.isExist(this.defaultTel)) {
-          alert("手机号不能为空");
+          this.$message.error("手机号不能为空");
           return flag;
         }
         if (!this.isPhone(this.defaultTel)) {
-          alert("手机号不规范");
+          this.$message.error("手机号不规范");
           return flag;
         }
         if (!this.isExist(this.defaultNickName)) {
-          alert("昵称不能为空");
+          this.$message.error("昵称不能为空");
           return flag;
         }
         if (!this.isExist(this.roleSel)) {
-          alert("请选择对应角色");
+          this.$message.error("请选择对应角色");
           return flag;
         }
         flag = true;
@@ -202,15 +202,15 @@
       accountVilidata() {
         let flag = false;
         if (!this.isExist(this.accountName)) {
-          alert("账号不能为空");
+          this.$message.error("账号不能为空");
           return flag;
         }
         if (!this.isExist(this.accountPwd)) {
-          alert("密码不能为空");
+          this.$message.error("密码不能为空");
           return flag;
         }
         if (this.accountPwd.length < 4) {
-          alert("密码至少4位");
+          this.$message.error("密码至少4位");
           return flag;
         }
         flag = true;
@@ -238,14 +238,14 @@
             if (data.ok) {
               if (data.body.result == 0) {
                 console.log(data.body);
-                alert(data.body.msg);
+                this.$message.success(data.body.msg);
                 this.initValue();
               } else {
                 if (data.body.result == 2) {
                   localStorage.removeItem("memberInfo");
                   this.$router.push("/login");
                 } else {
-                  alert(data.body.msg);
+                  this.$message.error(data.body.msg);
                 }
               }
             }
@@ -285,7 +285,7 @@
                     localStorage.removeItem("memberInfo");
                     this.$router.push("/login");
                   } else {
-                    alert(data.body.msg);
+                    this.$message.error(data.body.msg);
                   }
                 }
               }

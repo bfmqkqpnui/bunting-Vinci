@@ -45,7 +45,7 @@
               console.log(data.body);
               this.editorContent = data.body.data.body;
             } else {
-              alert(data.body.msg);
+              this.$message.error(data.body.msg);
             }
           }
         }, function (err) {
