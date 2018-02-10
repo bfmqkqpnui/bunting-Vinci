@@ -26,7 +26,7 @@
             </el-col>
           </el-row>
 
-          <el-row class="main-row">
+          <el-row class="main-row" v-show="!tableShowList.babyFlag">
             <el-col :span="24">
               <div class="block">
                 <el-date-picker
@@ -58,30 +58,14 @@
 
                 <tbody>
                 <tr align="center" v-for="(item,index) in memberDataList">
-                  <td>1</td>
-                  <td>张先生</td>
-                  <td>15589658956</td>
-                  <td>2018-01-12 15:25:26</td>
-                  <td>1256</td>
-                  <td>candy</td>
-                </tr>
-
-                <tr align="center">
-                  <td>2</td>
-                  <td>赵先生</td>
-                  <td>15589658956</td>
-                  <td>2018-01-12 15:25:26</td>
-                  <td>1256</td>
-                  <td>candy</td>
-                </tr>
-
-                <tr align="center">
-                  <td>3</td>
-                  <td>李女士</td>
-                  <td>15589658956</td>
-                  <td>2018-01-12 15:25:26</td>
-                  <td>1256</td>
-                  <td>candy</td>
+                  <td v-text="index+1"></td>
+                  <td v-text="item.user.name" v-if="item.user"></td>
+                  <td v-text="item.user.userName" v-if="item.user"></td>
+                  <td v-if="item.user">{{item.user.lastUpdate | formatDateTime}}</td>
+                  <td v-text="item.user.bagDeviceCode" v-if="item.user && item.user.bagDeviceCode"></td>
+                  <td v-else></td>
+                  <td v-text="item.user.babyName" v-if="item.user && item.user.babyName"></td>
+                  <td v-else></td>
                 </tr>
                 </tbody>
               </table>
@@ -98,13 +82,17 @@
                 </tr>
 
                 <tbody>
-                <tr align="center">
-                  <td>1</td>
-                  <td>candy</td>
-                  <td>张先生</td>
-                  <td>1568687</td>
-                  <td>35℃</td>
-                  <td>姿势一</td>
+                <tr align="center" v-for="(item,index) in babyDataList">
+                  <td v-text="index+1"></td>
+                  <td v-text="item.baby.nickName" v-if="item.baby && item.baby.nickName"></td>
+                  <td v-else></td>
+                  <td v-text="item.user.name"></td>
+                  <td v-text="item.bag.deviceCode" v-if="item.bag && item.bag.deviceCode"></td>
+                  <td v-else></td>
+                  <td v-if="item.lovelyTemperature">{{item.lovelyTemperature | formatTemperature}}</td>
+                  <td v-else></td>
+                  <td v-if="item.lovelyPosture" v-text="item.lovelyPosture"></td>
+                  <td v-else></td>
                 </tr>
                 </tbody>
               </table>
@@ -122,24 +110,15 @@
                 </tr>
 
                 <tbody>
-                <tr align="center">
-                  <td>1</td>
-                  <td>12423546</td>
-                  <td>2017-08-23 12:23:34</td>
-                  <td>56%</td>
-                  <td>正常</td>
-                  <td>1.0</td>
-                  <td>张先生</td>
-                </tr>
-
-                <tr align="center">
-                  <td>2</td>
-                  <td>32473985</td>
-                  <td>2017-08-23 12:23:34</td>
-                  <td>89%</td>
-                  <td>正常</td>
-                  <td>2.0</td>
-                  <td>李女士</td>
+                <tr align="center" v-for="(item,index) in deviceDataList">
+                  <td v-text="index+1"></td>
+                  <td v-text="item.bag.deviceCode"></td>
+                  <td>{{item.bag.lastUpdateTime | formatDateTime}}</td>
+                  <td>{{item.bag.electricQuantity | formatElectric}}</td>
+                  <td>{{item.bag.status | getBagStatus}}</td>
+                  <td v-text="item.bag.firmwareVersion"></td>
+                  <td v-text="item.user.name" v-if="item.user && item.user.name"></td>
+                  <td v-else></td>
                 </tr>
                 </tbody>
               </table>
@@ -186,21 +165,32 @@
         this.tableShowList.memberFlag = true;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = false;
+        this.currentPage = 1;
+        this.display = 10;
+        this.dateList = [];
         this.config();
       },
       showBaby() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = true;
         this.tableShowList.deviceFlag = false;
+        this.currentPage = 1;
+        this.display = 10;
+        this.dateList = [];
         this.config();
       },
       showDevice() {
         this.tableShowList.memberFlag = false;
         this.tableShowList.babyFlag = false;
         this.tableShowList.deviceFlag = true;
+        this.currentPage = 1;
+        this.display = 10;
+        this.dateList = [];
         this.config();
       },
       search() {
+        this.currentPage = 1;
+        this.display = 10;
         this.config();
       },
       getDate(val) {
@@ -224,6 +214,13 @@
         let memberInfo = this.$route.params.memberInfo;
         if(this.isExist(memberInfo)) {
           let url = '/api/analysis/queryUserAnalysis';
+          if(this.tableShowList.memberFlag && !this.tableShowList.babyFlag && !this.tableShowList.deviceFlag){
+            url = "/api/analysis/queryUserAnalysis";
+          }else if(!this.tableShowList.memberFlag && this.tableShowList.babyFlag && !this.tableShowList.deviceFlag){
+            url = "/api/analysis/queryBabyAnalysis";
+          }else if(!this.tableShowList.memberFlag && !this.tableShowList.babyFlag && this.tableShowList.deviceFlag){
+            url = "/api/analysis/queryBagAnalysis";
+          }
           let params = {
             pageIndex : this.currentPage,
             pageSize : this.display,
@@ -232,11 +229,9 @@
             endTime : this.dateList[1]
           };
           this.$http.post(url, params).then(function (data) {
-            this.$message.info(data);
-            debugger;
             if (data.ok) {
               if (data.body.result == 0) {
-                console.log(data.body);
+                console.log(data.body.data);
                 this.resultCount = data.body.data.resultCount;
                 this.currentPage = data.body.data.pageIndex;
                 if(this.tableShowList.memberFlag){
@@ -290,6 +285,27 @@
           return "";
         }
       },
+      formatTemperature(val){
+        if(!isNaN(val)){
+          return val + "℃";
+        }else{
+          return "";
+        }
+      },
+      getBagStatus(val){
+        let status = '正常';
+        if(!isNaN(val) && val == 0){
+          status = '停用';
+        }
+        return status;
+      },
+      formatElectric(val){
+        let ele = '';
+        if(!isNaN(val)){
+          ele = val + '%';
+        }
+        return ele;
+      }
     }
   }
 </script>

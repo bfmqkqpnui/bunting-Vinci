@@ -6,7 +6,7 @@
           <img src="/static/images/logo-primary.png" alt="Chain Logo">
         </div>
         <br/>
-        <h4 class="text-center mb5">健康小屋</h4>
+        <h4 class="text-center mb5">达芬奇睡袋</h4>
         <p class="text-center">后台登录</p>
 
         <div class="mb30"></div>
@@ -59,11 +59,11 @@
     methods: {
       login() {
         if (!this.isExist(this.userName)) {
-          alert("用户名不能为空");
+          this.$message.error("用户名不能为空");
           return;
         }
         if (!this.isExist(this.pwd)) {
-          alert("密码不能为空");
+          this.$message.error("密码不能为空");
           return;
         }
         let url = '/api/admin/login';
@@ -92,7 +92,7 @@
               localStorage.setItem("memberInfo",JSON.stringify(member));
               this.$router.push({path : '/index/user'});
             }else{
-              alert(data.body.msg);
+              this.$message.error(data.body.msg);
             }
           }
         }, function (err) {
