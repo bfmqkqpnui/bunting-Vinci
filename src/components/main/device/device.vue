@@ -13,8 +13,10 @@
       <el-col :span="2">
         <el-upload
           class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="/api/excelUpload"
           :limit="1"
+          :onError="uploadError"
+          :onSuccess="uploadSuccess"
           :show-file-list="false"
           :before-upload="beforeAvatarUpload">
           <el-button size="small" type="primary">导入设备号</el-button>
@@ -272,14 +274,30 @@
         if(file.type === 'application/vnd.ms-excel' || file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
           isExcel = true;
         }
-        const isLt2M = file.size / 1024 / 1024 > 2;
-        console.log(file);
-        console.log("文件类型:"+file.type + "<<<<" + isExcel);
-        console.log("文件大小:"+file.size);
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
+        const maxSize = 1048576 * 50;
+
+        const isLt50M = (file.size - maxSize) < 0;
+        if (!isLt50M) {
+          this.$message.error('上传文件大小不能超过 50MB!');
         }
-        return isExcel && isLt2M;
+        if (!isExcel) {
+          this.$message.error('上传文件类型不正确');
+        }
+        return isExcel && isLt50M;
+      },
+      // 上传错误
+      uploadError(response, file, fileList){
+        //console.log('上传文件失败', response)
+        this.$message.error("上传文件失败");
+      },
+      // 上传成功后的回调
+      uploadSuccess (response, file, fileList) {
+        //console.log('上传文件', response);
+        if(response.result == 0){
+          this.$router.push("/index/device");
+        }else{
+          this.$message.error(response.msg);
+        }
       }
     },
     //生命周期钩子：组件实例渲染完成时调用
